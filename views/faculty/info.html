@@ -1,13 +1,13 @@
-{% extends "home.html" %}
+{% extends "faculty.html" %}
 
-{% block title %}Add/Delete a user{% endblock %}
+{% block title %}Personal Info{% endblock %}
 
 {% block maincontent %}
 
-<h1>Register a new user</h1>
-<form action="/signup" method="POST">
+<h1>Edit personal information</h1>
+<form action="/info" method="POST">
 <label for="username">Username</label>
-<input type="text" name="username" /><br />
+<input type="text" name="username" value={{user.name}} readonly /><br />
 <label for="email">Email address</label>
 <input type="text" name="email" /><br />
 <label for="password">Password</label>
@@ -19,14 +19,8 @@
 <label for="department">Department</label>
 <input type="text" name="department" /><br />
 <label for="role">Role</label>
-<input type="text" name="role" /><br />
-<input type="submit" value="Create user" />
+<input type="text" name="role" value="Faculty" readonly /><br />
+<input type="submit" value="Save information" />
 </form>
-
-<h1>Delete an existing user</h1>
-<form action="/removeUser" method="POST">
-<label for="username">Username</label>
-<input type="text" name="username" /><br />
-<input type="submit" value="Delete user" />
 
 {% endblock %}

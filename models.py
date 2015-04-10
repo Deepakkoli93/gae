@@ -41,7 +41,6 @@ class User(webapp2_extras.appengine.auth.models.User):
 class Faculty(ndb.Model):
     """Models a  faculty with hod, courses, resume, webpage and a link to the user"""
     faculty = ndb.KeyProperty(kind = User)
-    hod = ndb.BooleanProperty()
     resume = ndb.BlobProperty()
     webpage = ndb.BlobProperty()
 
@@ -51,13 +50,29 @@ class Department(ndb.Model):
   name = ndb.StringProperty()
   hod = ndb.KeyProperty(kind = Faculty)
 
+class AcademicHistory(ndb.Model):
+  """Models the academic history of a student. It includes coures done,
+  grade obtained in it and the semester"""
+  course = ndb.StringProperty()
+  grade = ndb.StringProperty()
+  semester = ndb.StringProperty()
+
 class Student(ndb.Model):
   """Models a student"""
   student = ndb.KeyProperty(kind = User)
-  department = ndb.StringProperty()
   credits = ndb.FloatProperty()
+  history = ndb.StructuredProperty(AcademicHistory, repeated = True)
 
-
+class Course(ndb.Model):
+    """Models a course"""
+    course_id = ndb.StringProperty()
+    name = ndb.StringProperty()
+    description = ndb.StringProperty()
+    coordinator = ndb.KeyProperty(kind = Faculty)
+    department = ndb.KeyProperty(kind = Department)
+    credits = ndb.FloatProperty()
+    floated = ndb.BooleanProperty()
+    prereq = ndb.KeyProperty(kind = 'Course', repeated = True)
 
 
 

@@ -1,0 +1,23 @@
+{% extends "home.html" %}
+{% block title %}Add/Float a course{% endblock %}
+{% block maincontent %}
+
+<h1>Add/Update a course</h1>
+<label for="course_id">Course id</label>
+<input type="text" name="course_id" />
+<label for="dep_id">Department id</label>
+<input type="text" name="dep_id" />
+<label for="credits">Credits</label>
+<input type="number" name="credits" />
+<label for="description">Course Description</label>
+<textarea name="description" rows="3" cols="60"></textarea>
+<input type="submit" value="Update course">
+
+<h1>Float a course</h1>
+<label for="course_id">Course id</label>
+<input type="text" name="course_id" />
+<label for="faculty_id">Faculty id</label>
+<input type="text" name="faculty_id" />
+<input type="submit" value="Float the course" />
+
+{% endblock %}

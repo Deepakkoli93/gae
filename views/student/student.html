@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>{% block title %}Academic Website{% endblock %}</title>
+    <title>{% block title %}Web Academic System{% endblock %}</title>
     <style>
       input {
         display: block;
@@ -10,34 +10,29 @@
     </style>
   </head>
 
-  <body>
-
-  <div class="content">
-    {% block maincontent %}
-
-    {% endblock %}
-  </div>
-
-  <div>
-    <footer>
-      <hr/>
-      <p>
-        {% if not user %}
-          <a href="/login">Login (and forgot password)</a>
-        {% else %}
+<body>
+<table width="100%" border="0">
+    <td colspan="2" bgcolor="#b5dcb3" align="center">
+      <h1>Academic System</h1>
+    </td>
+  <tr valign="top">
+    <td bgcolor="#aaa" width="300" align="center">
+      <b>Main Menu</b><br />
           Logged in as <span style="background-color: OldLace">{{ user.name }}</span> | <a href="/logout">Logout</a>
-        {% endif %}
-        |
-        <a href="/student">Home</a>
-        |
-        <a href="/student/info">Show personal information</a>
-        |
-        <a href="/student/cart">Registration Cart </a>
-      </p>
+      <br />
+<a href="/student">Home</a><br />
+<a href="/student/info">Show personal information</a><br />
+<a href="/student/cart">Registration Cart </a>
+<a href="/student/courses">Courses</a>
 
-    </footer>
-  </div>
-
-
-  </body>
+    </td>
+    <td bgcolor="#eee" height="550">
+        {% block maincontent %}
+        <h1>CSL740 Academic System</h1>
+		{% endblock %}
+    </td>
+  </tr>
+	</table>
+	
+	</body>
 </html>

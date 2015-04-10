@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>{% block title %}Academic Website{% endblock %}</title>
+    <title>{% block title %}Web Academic System{% endblock %}</title>
     <style>
       input {
         display: block;
@@ -10,33 +10,24 @@
     </style>
   </head>
 
-  <body>
+<body>
+<h1>Academic System Login</h1>
 
-  <div class="content">
-    {% block maincontent %}
+{% if failed %}
 
-    {% endblock %}
-  </div>
+    <strong>Login failed!</strong> Check your credentials and try again.
 
-  <div>
-    <footer>
-      <hr/>
-      <p>
-        {% if not user %}
-          <a href="/login">Login (and forgot password)</a>
-        {% else %}
-          Logged in as <span style="background-color: OldLace">{{ user.name }}</span> | <a href="/logout">Logout</a>
-        {% endif %}
-        |
-        <a href="/">Home</a>
-        |
-        
-        <a href="/authenticated">Secured page</a> (you can see this after login)
-      </p>
+{% endif %}
 
-    </footer>
-  </div>
+<form class="form" action= "/login" method="POST">
+	<label for="username">Username</label>
+	<input type="text" value="{{ username }}" name="username"/>
+	<label for="password">Password</label>
+	<input type="password" name="password"/>
+	<button type="submit" href="/home" class="btn">Login</button>
+</form>
 
-
-  </body>
+<a href="/forgot">Forgot password</a>
+</body>
 </html>
+

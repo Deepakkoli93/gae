@@ -1,0 +1,22 @@
+{% extends "home.html" %}
+
+{% block title %}Add/Delete resources{% endblock %}
+
+{% block maincontent %}
+
+<h1>Add/Edit resource</h1>
+<form action="/resources" method="POST">
+<label for="title">Resource Title</label>
+<input type="text" name="title" /><br />
+<label for="description">Resource write-up</label>
+<textarea name="description" rows="3" cols="60"></textarea>
+<input type="submit" value="Create resource" />
+</form>
+
+<h1>Delete a resource</h1>
+<form action="/resources" method="POST">
+<label for="title">Resource Title</label>
+<input type="text" name="title" /><br />
+<input type="submit" value="Delete resource" />
+
+{% endblock %}

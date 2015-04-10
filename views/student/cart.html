@@ -1,6 +1,18 @@
 {% extends "student.html" %}
 {% block maincontent %}
 
-Under Construction!
+<h1>Credit Relaxation Request</h1>
+<form action="/credit" method="POST">
+<label for="relaxation">Credit Relaxation Request</label>
+<input type="text" name="relaxation" /><br />
+</form>
+
+<h1>Add course to cart</h1>
+<form action="/registerCourse" method="POST">
+<label for="register">Course id</label>
+<input type="text" name="register" /><br />
+</form>
+
+<h1>Registration Cart</h1>
 
 {% endblock %}

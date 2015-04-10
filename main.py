@@ -44,6 +44,20 @@ def admin_required(handler):
 
   return check_login
 
+def faculty_required(handler):
+  """
+    Decorator that checks if there's a user associated with the current session.
+    Will also fail if there's no session present.
+  """
+  def check_login(self, *args, **kwargs):
+    auth = self.auth.get_user_by_session()
+    if not auth or auth['role']!='faculty':
+      self.redirect(self.uri_for('login'), abort=True)
+    else:
+      return handler(self, *args, **kwargs)
+
+  return check_login
+
 class BaseHandler(webapp2.RequestHandler):
   @webapp2.cached_property
   def auth(self):
@@ -117,10 +131,10 @@ class BaseHandler(webapp2.RequestHandler):
 
 class MainHandler(BaseHandler):
   def get(self):
-    self.render_template('home.html')
+    self.render_template('main.html')
 
 class SignupHandler(BaseHandler):
-  @admin_required
+ # @admin_required
   def get(self):
     self.render_template('signup.html')
 
@@ -289,6 +303,8 @@ class LoginHandler(BaseHandler):
         self.redirect(self.uri_for('admin'))
       if(user_data.role=='student'):
         self.redirect(self.uri_for('student'))
+      if(user_data.role=='faculty'):
+        self.redirect(self.uri_for('faculty'))
         #self.render_template('admin.html',False)
       #if(u['role']=='student'):
        #self.display_message('you are a student')
@@ -338,21 +354,69 @@ class addDepartmentHandler(BaseHandler):
         dep.hod = valid_hod.key
         dep.put()
 
+class addCourseHandler(BaseHandler):
+  @admin_required
+  def get(self):
+    self.render_template('addCourse.html')
+
+  def get(post):
+    course_id = self.request.get('course_id')
+    name = self.request.get('name')
+    coordinator = self.request.get('coordinator')
+    department = self.request.get('department')
+    floated = self.request.get('floated')
+    prereq = self.request.get('prereq')
 
 class LogoutHandler(BaseHandler):
   def get(self):
     self.auth.unset_session()
-    self.redirect(self.uri_for('home'))
+    self.redirect(self.uri_for('main'))
 
 class AuthenticatedHandler(BaseHandler):
   @user_required
   def get(self):
     self.render_template('authenticated.html')
 
+class removeUserHandler(BaseHandler):
+  @admin_required
+  def get(self):
+    pass
+
+  def post(self):
+    #username = self.request.get('username')
+    #uid = models.User.get_by_id(username)
+    #uid.delete()
+    #self.display_message(uid)
+    #TODO remove user?
+    pass
 class StudentHandler(BaseHandler):
   @user_required
   def get(self):
     self.render_template('student/student.html')
+
+class FacultyHandler(BaseHandler):
+  @faculty_required
+  def get(self):
+    self.render_template('faculty/faculty.html')
+
+class FacultyInfoHandler(BaseHandler):
+  @faculty_required
+  def get(self):
+    params = {
+    'user_data' : self.user,
+    'faculty_data' : models.Student.get_by_id(self.user.email_address)
+    }
+    self.render_template('faculty/info.html',params)
+
+class FacultyCoursesHandler(BaseHandler):
+  @faculty_required
+  def get(self):
+    self.render_template('faculty/courses.html')
+
+class FacultyRequestsHandler(BaseHandler):
+  @faculty_required
+  def get(self):
+    self.render_template('faculty/requests.html')
 
 class StudentInfoHandler(BaseHandler):
   @user_required
@@ -378,7 +442,7 @@ config = {
 }
 
 app = webapp2.WSGIApplication([
-    webapp2.Route('/', MainHandler, name='home'),
+    webapp2.Route('/', MainHandler, name='main'),
     webapp2.Route('/signup', SignupHandler),
     webapp2.Route('/<type:v|p>/<user_id:\d+>-<signup_token:.+>',
       handler=VerificationHandler, name='verification'),
@@ -388,10 +452,16 @@ app = webapp2.WSGIApplication([
     webapp2.Route('/forgot', ForgotPasswordHandler, name='forgot'),
     webapp2.Route('/authenticated', AuthenticatedHandler, name='authenticated'),
     webapp2.Route('/admin', AdminHandler, name='admin'),
+    webapp2.Route('/removeUser', removeUserHandler),
     webapp2.Route('/student', StudentHandler, name='student'),
+    webapp2.Route('/faculty', FacultyHandler, name='faculty'),
+    webapp2.Route('/faculty/info', FacultyInfoHandler),
+    webapp2.Route('/faculty/courses', FacultyCoursesHandler),
+    webapp2.Route('/faculty/requests', FacultyRequestsHandler),
     webapp2.Route('/student/info', StudentInfoHandler),
     webapp2.Route('/student/cart', CartHandler),
-    webapp2.Route('/addDepartment', addDepartmentHandler)
+    webapp2.Route('/addDepartment', addDepartmentHandler),
+    webapp2.Route('/addCourse', addCourseHandler)
 ], debug=True, config=config)
 
 logging.getLogger().setLevel(logging.DEBUG)

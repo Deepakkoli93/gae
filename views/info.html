@@ -1,0 +1,24 @@
+{% extends "home.html" %}
+
+{% block title %}Personal Info{% endblock %}
+
+{% block maincontent %}
+
+<h1>Edit personal information</h1>
+<form action="/info" method="POST">
+<label for="username">Username</label>
+<input type="text" name="username" value={{user.name}} readonly /><br />
+<label for="email">Email address</label>
+<input type="text" name="email" /><br />
+<label for="password">Password</label>
+<input type="password" name="password" /><br />
+<label for="name">Name</label>
+<input type="text" name="name" /><br />
+<label for="lastname">Last Name</label>
+<input type="text" name="lastname" /><br />
+<label for="role">Role</label>
+<input type="text" name="role" value="Admin" readonly /><br />
+<input type="submit" value="Save information" />
+</form>
+
+{% endblock %}

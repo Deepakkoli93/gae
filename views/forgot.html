@@ -1,6 +1,16 @@
-{% extends "main.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>{% block title %}Web Academic System{% endblock %}</title>
+    <style>
+      input {
+        display: block;
+      }
+    </style>
+  </head>
 
-{% block maincontent %}
+<body>
 
 <h1>Recover password</h1>
 
@@ -15,4 +25,5 @@
 	<input type="submit" value="Send password reset link"/>
 </form>
 
-{% endblock %}
+</body>
+</html>

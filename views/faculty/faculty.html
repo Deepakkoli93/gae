@@ -11,6 +11,8 @@
   </head>
 
 <body>
+{% autoescape off %}{{ user_data.name  }} {{user_data.lastname}} {{user_data.department}} {{user_data.email_address}}
+{{faculty_data}} {{faculty_data.student}}{% endautoescape %}
 <table width="100%" border="0">
     <td colspan="2" bgcolor="#b5dcb3" align="center">
       <h1>Academic System</h1>
@@ -20,17 +22,15 @@
       <b>Main Menu</b><br />
           Logged in as <span style="background-color: OldLace">{{ user.name }}</span> | <a href="/logout">Logout</a>
       <br />
-<a href="/signup">Add/Delete User</a><br />
-<a href="/floatCourse">Add/Float Course</a><br />
-<a href="/addDepartment">Add/Edit Department</a><br />
-<a href="/info">Personal Information</a><br />
-<a href="/resources">Add/Modify Resources</a>
+<a href="/faculty">Home</a><br />
+<a href="/faculty/info">Show personal information</a><br />
+<a href="/faculty/requests">Student requests</a><br />
+<a href="faculty/courses">Courses</a>
 
     </td>
     <td bgcolor="#eee" height="550">
         {% block maincontent %}
         <h1>CSL740 Academic System</h1>
-		<p>Try it out by registering <a href="/signup">here</a>.</p>
 		{% endblock %}
     </td>
   </tr>
@@ -38,4 +38,3 @@
 	
 	</body>
 </html>
-
