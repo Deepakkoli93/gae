@@ -20,17 +20,27 @@
       <b>Main Menu</b><br />
           Logged in as <span style="background-color: OldLace">{{ user.name }}</span> | <a href="/logout">Logout</a>
       <br />
-<a href="/signup">Add/Delete User</a><br />
-<a href="/floatCourse">Add/Float Course</a><br />
-<a href="/addDepartment">Add/Edit Department</a><br />
-<a href="/info">Personal Information</a><br />
-<a href="/resources">Add/Modify Resources</a>
+<a href="/admin/signup">Add/Delete User</a><br />
+<a href="/admin/floatCourse">Add/Float Course</a><br />
+<a href="/admin/addDepartment">Add/Edit Department</a><br />
+<a href="/admin/info">Personal Information</a><br />
+<a href="/admin/resources">Add/Modify Resources</a>
+<br><b>{{ current_sem }}</b></br>
+  <form action=""  method="POST">
+    <input type="submit" name="myform" value="Start new semester" />
+    
+    <form action="" method="POST">
+  <input type="radio" name="reg" value="open">Open<br>
+  <input type="radio" name="reg" value="closed">Closed
+  </form>
+
+
+
 
     </td>
     <td bgcolor="#eee" height="550">
         {% block maincontent %}
-        <h1>CSL740 Academic System</h1>
-		<p>Try it out by registering <a href="/signup">here</a>.</p>
+        
 		{% endblock %}
     </td>
   </tr>

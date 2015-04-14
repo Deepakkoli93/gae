@@ -1,11 +1,11 @@
-{% extends "home.html" %}
+{% extends "admin.html" %}
 
 {% block title %}Register a new user{% endblock %}
 
 {% block maincontent %}
 
 <h1>Create a new department</h1>
-<form action="/addDepartment" method="POST">
+<form action="/admin/addDepartment" method="POST">
 <label for="dep_id">Department id</label>
 <input type="text" name="dep_id" />
 <label for="name">Department name</label>

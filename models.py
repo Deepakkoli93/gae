@@ -13,7 +13,14 @@ class User(webapp2_extras.appengine.auth.models.User):
         The raw password which will be hashed and stored
     """
     self.password = security.generate_password_hash(raw_password, length=12)
-
+  def set_email(self, email):
+    self.email_address = email
+  def set_name(self, name):
+    self.name = name
+  def set_lastname(self, lastname):
+    self.last_name = lastname
+  def set_department(self, department):
+    self.department(department)
   @classmethod
   def get_by_auth_token(cls, user_id, token, subject='auth'):
     """Returns a user object based on a user ID and token.
@@ -42,7 +49,7 @@ class Faculty(ndb.Model):
     """Models a  faculty with hod, courses, resume, webpage and a link to the user"""
     faculty = ndb.KeyProperty(kind = User)
     resume = ndb.BlobProperty()
-    webpage = ndb.BlobProperty()
+    webpage = ndb.StringProperty()
 
 class Department(ndb.Model):
   """Models a department with department id."""
@@ -73,6 +80,20 @@ class Course(ndb.Model):
     credits = ndb.FloatProperty()
     floated = ndb.BooleanProperty()
     prereq = ndb.KeyProperty(kind = 'Course', repeated = True)
+
+class Registration(ndb.Model):
+  """Models the registration status"""
+  course = ndb.KeyProperty(kind = Course)
+  student = ndb.KeyProperty(kind = Student)
+  closed = ndb.BooleanProperty()
+  
+class Application(ndb.Model):
+  """Models the credit relaxation(false) and course approval(true) requests"""
+  app_type = ndb.BooleanProperty()
+  student = ndb.KeyProperty(kind = Student)
+  faculty = ndb.KeyProperty(kind = Faculty)
+  content = ndb.StringProperty()
+  status = ndb.BooleanProperty()
 
 
 

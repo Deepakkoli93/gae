@@ -1,11 +1,11 @@
-{% extends "home.html" %}
+{% extends "admin.html" %}
 
 {% block title %}Add/Delete resources{% endblock %}
 
 {% block maincontent %}
 
 <h1>Add/Edit resource</h1>
-<form action="/resources" method="POST">
+<form action="/admin/resources" method="POST">
 <label for="title">Resource Title</label>
 <input type="text" name="title" /><br />
 <label for="description">Resource write-up</label>
