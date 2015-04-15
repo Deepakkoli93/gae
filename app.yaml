@@ -17,10 +17,16 @@ handlers:
   script: main.app
   secure: always
 
+- url: /images
+  static_dir: images
+
+- url: /stylesheets
+  static_dir: stylesheets
+
 - url: .*
   script: main.app
-
 
 libraries:
 - name: webapp2
   version: "2.5.1"
+

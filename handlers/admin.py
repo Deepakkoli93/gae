@@ -5,7 +5,7 @@ class AdminHandler(BaseHandler):
     params = {'current_sem':current_sem, 'registration_open':registration_open}
     self.render_template('admin/admin.html',params)
   def post(self):
-    if(self.request.POST.get('myform') == "Start new semester"):
+    if(self.request.POST.get('newsem') == "Start new semester"):
       current_sem = current_sem + 1
       self.display_message("new semester started")
 
