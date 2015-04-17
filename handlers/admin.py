@@ -1,4 +1,8 @@
 from misc import *
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext.webapp.util import run_wsgi_app
+
 class AdminHandler(BaseHandler):
   @user_required
   def get(self):
@@ -12,7 +16,7 @@ class AdminHandler(BaseHandler):
 class SignupHandler(BaseHandler):
   @admin_required
   def get(self):
-    self.render_template('admin/signup.html')
+  	self.render_template('admin/signup.html')
 
   def post(self):
     user_name = self.request.get('username')
@@ -63,11 +67,11 @@ class SignupHandler(BaseHandler):
     
     user = user_data[1]
     if(role=="student"):
-      stu = models.Student(student=user.key, credits=10, id=user_name)
+      stu = models.Student(student=user.key,name=name+" "+last_name, credits=10, id=user_name)
       stu.put()
 
     if(role=="faculty"):
-      fac = models.Faculty(faculty=user.key, id=user_name)
+      fac = models.Faculty(faculty=user.key,name=name+" "+last_name, id=user_name)
       fac.put()
 
     user_id = user.get_id()
@@ -77,10 +81,11 @@ class SignupHandler(BaseHandler):
     verification_url = self.uri_for('verification', type='v', user_id=user_id,
       signup_token=token, _full=True)
 
-    msg = 'Send an email to user in order to verify their address. \
-          They will be able to do so by visiting <a href="{url}">{url}</a>'
+    #msg = 'Send an email to user in order to verify their address. \
+    #      They will be able to do so by visiting <a href="{url}">{url}</a>'
 
-    self.display_message(msg.format(url=verification_url))
+    #self.display_message(msg.format(url=verification_url))
+    self.display_message("user created")
 
     sender_address = "deepakkoli93@gmail.com"
     subject = "Confirm your registration"
@@ -99,6 +104,7 @@ class addDepartmentHandler(BaseHandler):
     if hod == "": #creating a new dept without a hod
       dep = models.Department(dep_id=dep_id, name=name, id=dep_id)
       dep.put()
+      self.display_message("Department created")
       return
     else:
       valid_hod  = models.Faculty.get_by_id(hod)
@@ -119,21 +125,95 @@ class addDepartmentHandler(BaseHandler):
 class floatCourseHandler(BaseHandler):
   @admin_required
   def get(self):
-    self.render_template('admin/floatCourse.html')
+  	#get a list of all departments
+  	dep = models.Department.query()
+  	#get a list of all faculties
+  	fac = models.Faculty.query()
+  	courses = models.Course.query()
+  	params = {"dep":dep, "fac":fac, "courses":courses}
+  	self.render_template('admin/floatCourse.html',params)
 
   def post(self):
-    course_id = self.request.get('course_id')
-    name = self.request.get('name')
-    coordinator = self.request.get('coordinator')
-    department = self.request.get('department')
-    floated = self.request.get('floated')
-    prereq = self.request.get('prereq')
+    logging.info(self.request.POST.get("myform"))
+    if self.request.POST.get("myform") == "Update course":
+	    course_id = self.request.get('course_id')
+	    name = self.request.get('name')
+	    dep_id = self.request.get('dep_id')
+	    logging.info(dep_id+"this was dep id")
+	    description = self.request.get('description')
+	    floated = self.request.get('floated')
+	    prereq1 = self.request.get('prereq1')
+	    prereq2 = self.request.get('prereq2')
+	    prereq3 = self.request.get('prereq3')
+	    prereq4 = self.request.get('prereq4')
+	    prereqs = [prereq1,prereq2,prereq3,prereq4]
+	    credits = float(self.request.get('credits'))
+	    d = models.Department.get_by_id(dep_id)
+	    course = models.Course(course_id=course_id, name=name,
+	    	description=description, credits = credits,
+	    	department=ndb.Key(urlsafe=dep_id),floated=False,id=course_id
+	    	)
+	    for i in range(0,4):
+	    	p = prereqs[i]
+	    	if p!="":
+	    		course.prereq.append(ndb.Key(urlsafe=p))
+	    course.put()
+	    self.display_message("course created successfully")
+
+    elif self.request.POST.get("myform") == "Float the course":
+	    course_id = self.request.get('course_id2')
+	    logging.info("course id is")
+	    logging.info(course_id)
+	    faculty_id = self.request.get('faculty_id')
+	    logging.info(faculty_id)
+	    course = models.Course.get_by_id(ndb.Key(urlsafe=course_id).string_id())
+	    course.floated = True
+	    course.coordinator = ndb.Key(urlsafe=faculty_id)
+	    course.put()
+	    self.display_message("course %s (%s) floated" %(course.name,course.course_id))
+
 
 class resourcesHandler(BaseHandler):
   @admin_required
   def get(self):
-    self.render_template('admin/resources.html')
+  	upload_url = blobstore.create_upload_url('/admin/resource_upload')
+  	resources = models.Resources.query()
+  	params={"upload_url":upload_url,"resources":resources}
+  	self.render_template('admin/resources.html',params)
+  	logging.info("upload url = "+upload_url)
+  	#upload_url = blobstore.create_upload_url('/admin/upload_photo')
+        # [END upload_url]
+        # [START upload_form]
+        # The method must be "POST" and enctype must be set to "multipart/form-data".
+     #   self.response.out.write('<html><body>')
+     #  self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)
+    #   self.response.out.write('''Upload File: <input type="text" name="resource_id"><br> <input type="file" name="file"><br> <input type="submit"
+    #       name="submit" value="Submit"> </form></body></html>''')
+     #   logging.info("here1")
 
+class resourceuploadHandler(blobstore_handlers.BlobstoreUploadHandler,BaseHandler):
+	def post(self):
+		logging.info("here2")
+		upload = self.get_uploads()[0]
+		logging.info("upload key "+str(upload.key()))
+		resource_title = self.request.get('resource_title')
+		resource = models.Resources(resource_title=resource_title,resource_key=upload.key())
+		resource.put()
+		logging.info("here3")
+		#self.redirect('/admin/view_resource/%s' % upload.key())
+		self.display_message("Resource uploaded")
+		#pass
+
+class viewresourceHandler(blobstore_handlers.BlobstoreDownloadHandler,BaseHandler):
+    def post(self):
+    	#logging.info("here4")
+        #logging.info("key is "+photo_key)
+        rid = self.request.get('title')
+        logging.info("rid = ")
+        logging.info(ndb.Key(urlsafe=rid).integer_id())
+        resource = models.Resources.get_by_id(ndb.Key(urlsafe=rid).integer_id())
+        bi = blobstore.BlobInfo.get(resource.resource_key)
+        self.send_blob(bi,save_as=True)
 class removeUserHandler(BaseHandler):
   @admin_required
   def get(self):

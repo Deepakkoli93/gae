@@ -5,18 +5,25 @@
 {% block maincontent %}
 
 <h1>Add/Edit resource</h1>
-<form action="/admin/resources" method="POST">
-<label for="title">Resource Title</label>
-<input type="text" name="title" /><br />
-<label for="description">Resource write-up</label>
-<textarea name="description" rows="3" cols="60"></textarea>
-<input type="submit" value="Create resource" />
+<form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
+<label for="resource_title">Enter resource title</label>
+<input type="text" name="resource_title" />
+<label for="resource_file">Upload resource</label>
+<input type="file" name="file" />
+<input type="submit" name="submit" value="Submit">
+
 </form>
 
-<h1>Delete a resource</h1>
-<form action="/resources" method="POST">
+<h1>Download a resource</h1>
+<form action="/admin/view_resource" method="POST">
 <label for="title">Resource Title</label>
-<input type="text" name="title" /><br />
-<input type="submit" value="Delete resource" />
+
+<select name="title">
+{% for r in resources%}
+  <option value={{ r.key.urlsafe }}>{{ r.resource_title }}</option>
+{%endfor%}
+</select><br />
+
+<input type="submit" value="Download resource" />
 
 {% endblock %}

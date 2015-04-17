@@ -3,6 +3,7 @@ from handlers.misc import *
 from handlers.admin import *
 from handlers.student import *
 from handlers.faculty import *
+
 url_map = [
     webapp2.Route('/', MainHandler, name='main'),
     webapp2.Route('/admin/signup', SignupHandler),
@@ -24,7 +25,9 @@ url_map = [
     webapp2.Route('/student/cart', CartHandler),
     webapp2.Route('/admin/addDepartment', addDepartmentHandler),
     webapp2.Route('/admin/floatCourse',floatCourseHandler),
-    webapp2.Route('/admin/resources',resourcesHandler)
+    webapp2.Route('/admin/resources',resourcesHandler),
+    webapp2.Route('/admin/resource_upload',resourceuploadHandler),
+    webapp2.Route('/admin/view_resource', viewresourceHandler)
 ]
 app = webapp2.WSGIApplication(url_map, debug=True, config=config)
 

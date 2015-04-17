@@ -48,6 +48,7 @@ class User(webapp2_extras.appengine.auth.models.User):
 class Faculty(ndb.Model):
     """Models a  faculty with hod, courses, resume, webpage and a link to the user"""
     faculty = ndb.KeyProperty(kind = User)
+    name = ndb.StringProperty()
     resume = ndb.BlobProperty()
     webpage = ndb.StringProperty()
 
@@ -67,6 +68,7 @@ class AcademicHistory(ndb.Model):
 class Student(ndb.Model):
   """Models a student"""
   student = ndb.KeyProperty(kind = User)
+  name = ndb.StringProperty()
   credits = ndb.FloatProperty()
   history = ndb.StructuredProperty(AcademicHistory, repeated = True)
 
@@ -95,6 +97,9 @@ class Application(ndb.Model):
   content = ndb.StringProperty()
   status = ndb.BooleanProperty()
 
+class Resources(ndb.Model):
+  resource_title = ndb.StringProperty()
+  resource_key = ndb.BlobKeyProperty()
 
 
 

@@ -3,21 +3,81 @@
 {% block maincontent %}
 
 <h1>Add/Update a course</h1>
+<form action="/admin/floatCourse" method="POST">
+
 <label for="course_id">Course id</label>
 <input type="text" name="course_id" />
-<label for="dep_id">Department id</label>
-<input type="text" name="dep_id" />
+<label for="name">Name</label>
+<input type="text" name="name" />
+
+<label for="department">Department</label><br />
+<select name="dep_id">
+{% for d in dep%}
+  <option value={{ d.key.urlsafe }}>{{ d.name }}</option>
+{%endfor%}
+</select><br />
+
+</select><br />
+
 <label for="credits">Credits</label>
-<input type="number" name="credits" />
+<input type="float" name="credits" />
+
+<label for="prereq1">Pre requisite 1</label>
+<select name="prereq1">
+  <option value="">--Select course--</option>
+
+{% for c in courses%}
+  <option value={{ c.key.urlsafe }}>{{ c.name }}</option>
+{%endfor%}
+</select><br />
+
+<label for="prereq2">Pre requisite 2</label>
+<select name="prereq2">
+  <option value="">--Select course--</option>
+
+{% for c in courses%}
+  <option value={{ c.key.urlsafe }}>{{ c.name }}</option>
+{%endfor%}
+</select><br />
+
+<label for="prereq3">Pre requisite 3</label>
+<select name="prereq3" >
+  <option value="">--Select course--</option>
+
+{% for c in courses%}
+  <option value={{ c.key.urlsafe }}>{{ c.name }}</option>
+{%endfor%}
+</select><br />
+
+<label for="prereq4">Pre requisite 4</label>
+<select name="prereq4">
+  <option value="">--Select course--</option>
+
+{% for c in courses%}
+  <option value={{ c.key.urlsafe }}>{{ c.name }}</option>
+{%endfor%}
+</select><br />
+
 <label for="description">Course Description</label>
 <textarea name="description" rows="3" cols="60"></textarea>
-<input type="submit" value="Update course">
+<input type="submit" name="myform" value="Update course">
 
 <h1>Float a course</h1>
-<label for="course_id">Course id</label>
-<input type="text" name="course_id" />
-<label for="faculty_id">Faculty id</label>
-<input type="text" name="faculty_id" />
-<input type="submit" value="Float the course" />
+<form action="/admin/floatCourse"  method="POST">
+
+<select name="course_id2">
+{% for c in courses%}
+  <option value={{ c.key.urlsafe }}>{{ c.name }}</option>
+{%endfor%}
+</select><br />
+
+<select name="faculty_id">
+{% for f in fac%}
+  <option value={{ f.key.urlsafe }}>{{ f.name }}</option>
+{%endfor%}
+</select><br />
+
+
+<input type="submit" name="myform" value="Float the course" />
 
 {% endblock %}

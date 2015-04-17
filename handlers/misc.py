@@ -119,6 +119,8 @@ class BaseHandler(webapp2.RequestHandler):
     }
     if(role=="faculty"):
       self.render_template('faculty/message.html',params)
+    elif(role=="student"):
+      self.render_template('student/message.html',params)
     else:
       self.render_template('message.html', params)
 
