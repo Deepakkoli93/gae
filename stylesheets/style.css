@@ -29,7 +29,7 @@ img{max-width:100%;}
 /*end reset*/
 /****-----start-body----****/
 body{
-	background:url(../images/bg.jpg)  no-repeat center fixed;
+	background:url(../images/iit-delhi.jpg)  no-repeat center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -39,7 +39,7 @@ body{
 
 }
 .login-form {
-	background:#fff;
+	background:#FFFAF0;
 	width:32%;
 	margin:9% auto 4% auto;
  	position: relative;
@@ -48,6 +48,8 @@ body{
 	position: absolute;
 	top:-15%;
 	left: 35%;
+	height:140px;
+	width:140px;
 }
 .head img {
 	border-radius:50%;

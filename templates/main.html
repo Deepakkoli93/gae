@@ -8,27 +8,46 @@
         display: block;
       }
     </style>
-        
+        <meta charset="utf-8">
+    <link href="stylesheets/style.css" rel='stylesheet' type='text/css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!--webfonts-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:600italic,400,300,600,700' rel='stylesheet' type='text/css'>
+    <!--//webfonts-->
   </head>
 
 <body>
-<h1>Academic System Login</h1>
 
-{% if failed %}
+
+
+<div class="login-form">
+  <div class="head">
+    <img src="images/IIT_Delhi_logo.jpg" alt="" />
+  </div>
+  <form class="form" action= "/login" method="POST">
+  {% if failed %}
 
     <strong>Login failed!</strong> Check your credentials and try again.
 
 {% endif %}
+    <li>
+  	<input type="text" class="text" value="USERNAME" onfocus="this.value='';" onblur="if (this.value == '') {this.value = 'USERNAME';}" name="username"/>
+    </li>
+    <li>
+  	<input type="password" class="text" value="PASSWORD" name="password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Password';}" />
+    </li>
 
-<form class="form" action= "/login" method="POST">
-	<label for="username">Username</label>
-	<input type="text" value="{{ username }}" name="username"/>
-	<label for="password">Password</label>
-	<input type="password" name="password"/>
-	<button type="submit" href="/home" class="btn">Login</button>
-</form>
+    <div class="p-container">
+  	<button type="submit"  value="SIGN IN" class="btn">Login</button>
+    <br />
+    <p><a href="/forgot">Forgot password</a></p>
 
-<a href="/forgot">Forgot password</a>
+    <div class="clear"> </div>
+    </div>
+  </form>
+
+</div>
 
 
         

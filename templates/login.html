@@ -1,7 +1,13 @@
 {% extends "main.html" %}
 
 {% block maincontent %}
-
+<meta charset="utf-8">
+		<link href="css/style.css" rel='stylesheet' type='text/css' />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+		<!--webfonts-->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:600italic,400,300,600,700' rel='stylesheet' type='text/css'>
+		<!--//webfonts-->
 <h1>Login</h1>
 
 {% if failed %}
@@ -10,14 +16,18 @@
 
 {% endif %}
 
-<form class="form" action= "/login" method="POST">
-	<label for="username">Username</label>
-	<input type="text" value="{{ username }}" name="username"/>
-	<label for="password">Password</label>
-	<input type="password" name="password"/>
-	<button type="submit" class="btn">Login</button>
-</form>
-
+<div class="login-form">
+	<div class="head">
+		<img src="images/mem2.jpg" alt=""/>
+	</div>
+	<form class="form" action= "/login" method="POST">
+		<label for="username">Username</label>
+		<input type="text" value="{{ username }}" onfocus="this.value='';" name="username"/>
+		<label for="password">Password</label>
+		<input type="password" name="password"/>
+		<button type="submit" class="btn">Login</button>
+	</form>
+</div>
 <a href="/forgot">Forgot password</a>
 
 
