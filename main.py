@@ -23,6 +23,7 @@ url_map = [
     webapp2.Route('/faculty/requests', FacultyRequestsHandler),
     webapp2.Route('/student/info', StudentInfoHandler),
     webapp2.Route('/student/cart', CartHandler),
+    webapp2.Route('/student/courses',StudentCoursesHandler),
     webapp2.Route('/admin/addDepartment', addDepartmentHandler),
     webapp2.Route('/admin/floatCourse',floatCourseHandler),
     webapp2.Route('/admin/resources',resourcesHandler),

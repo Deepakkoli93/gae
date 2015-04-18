@@ -22,17 +22,21 @@
       <br />
 <a href="/student">Home</a><br />
 <a href="/student/info">Show personal information</a><br />
-<a href="/student/cart">Registration Cart </a>
-<a href="/student/courses">Courses</a>
+<a href="/student/cart">Registration Cart </a><br />
+{% for course in courses %}
+<form action="/student" method="POST">
+<input type="submit" name={{ course.course_id }} value={{ course.course_id }} readonly><br />
+</form>
+{% endfor %}
 
     </td>
     <td bgcolor="#eee" height="550">
         {% block maincontent %}
         <h1>CSL740 Academic System</h1>
-		{% endblock %}
+    {% endblock %}
     </td>
   </tr>
-	</table>
-	
-	</body>
+  </table>
+  
+  </body>
 </html>

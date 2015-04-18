@@ -1,10 +1,31 @@
 {% extends "student.html" %}
 
+{% block title %}Personal Info{% endblock %}
+
  {% block maincontent %}
-<p>{% autoescape off %}{{ user_data.name  }} {{user_data.lastname}} {{user_data.department}} {{user_data.email_address}}
-{{student_data.credits}} {{student_data.student}}{% endautoescape %}
- </p>
+ 
+ 
+ <h1>Edit personal information</h1>
+<form action="/student/info" method="POST">
+<label for="username">Username</label>
+<input type="text" name="username" value={{ userid }} readonly /><br />
+<label for="email">Email address</label>
+<input type="text" name="email" value={{ user_data.email_address }} /><br />
+<label for="name">Name</label>
+<input type="text" name="name" value={{ user_data.name }} /><br />
+<label for="lastname">Last Name</label>
+<input type="text" name="lastname" value={{ user_data.last_name }} /><br />
+<label for="department">Department</label>
+<input type="text" name="department" value={{ user_data.department }} readonly /><br />
+<label for="credits">Credits available</label>
+<input type="text" name="credits" value={{ student_data.credits }} readonly /><br />
+<label for="role">Role</label>
+<input type="text" name="role" value="Student" readonly /><br />
+<input type="submit" value="Save information" />
+</form>
 
 
     {% endblock %}
+
+
 

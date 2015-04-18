@@ -2,17 +2,44 @@
 {% block maincontent %}
 
 <h1>Credit Relaxation Request</h1>
-<form action="/credit" method="POST">
+<form action="/student/cart" method="POST">
 <label for="relaxation">Credit Relaxation Request</label>
 <input type="text" name="relaxation" /><br />
+<input type="submit" name="relax" value="Submit relaxation request" />
 </form>
 
 <h1>Add course to cart</h1>
-<form action="/registerCourse" method="POST">
-<label for="register">Course id</label>
-<input type="text" name="register" /><br />
+<form action="/student/cart" method="POST">
+<label for="course">Course id</label>
+<input type="text" name="course" /><br />
+<input type="submit" name="registerCourse" value="Add course" />
 </form>
 
 <h1>Registration Cart</h1>
 
+
+	
+	<table style="width:100%">
+		<tr>
+			<th>Course</th>
+			<th>Status</th>
+			<th>Credits</th>
+			<th>Instructor</th>
+			<th>Application</th>
+			<th>Remove course from cart</th>
+		</tr>
+		{%	for course_id,course_credits,course_fac,closed in c %}
+		<tr>
+			<form action="/student/cart" method="POST">
+			<td><input type="text" name="course_id" value={{ course_id }} readonly></td>
+			<td>{{ closed }}</td>
+			<td>{{ course_credits }}</td>
+			<td>{{ course_fac }}</td>
+			<td>{% if closed %}<input type="text" name="approval" /> <input type="submit" name="approve" value="Submit Approval request" /> {% endif %}</td>
+			<td><input type="submit" name="remove" value="Remove course" /></td>
+			</form>
+		</tr>
+		{% endfor %}
+		</table>
+		
 {% endblock %}
