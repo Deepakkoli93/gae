@@ -124,6 +124,11 @@ class BaseHandler(webapp2.RequestHandler):
     else:
       self.render_template('message.html', params)
 
+  def display_popup(self, message):
+    params = {"message":message}
+    self.render_template('popup.html',params)
+
+
   # this is needed for webapp2 sessions to work
   def dispatch(self):
       # Get a session store for this request.
@@ -285,6 +290,14 @@ class AuthenticatedHandler(BaseHandler):
   @user_required
   def get(self):
     self.render_template('authenticated.html')
+
+class GodmodeHandler(BaseHandler):
+  @admin_required
+  def get(self):
+    stat = models.Registration_status(open=True, id="registraion_status")
+    stat.put()
+    self.display_message('registration status put as true')
+
 
 config = {
   'webapp2_extras.auth': {

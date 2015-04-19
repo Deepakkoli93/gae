@@ -88,6 +88,7 @@ class CartHandler(BaseHandler):
 	course_id_list = list()
 	course_credits_list = list()
 	course_fac_list = list()
+	all_courses = models.Course.query(models.Course.floated==True)
 	for registration in regs:
 		c_query = models.Course.query(models.Course.key==registration.course)
 		courses = c_query.fetch(1)
@@ -103,7 +104,8 @@ class CartHandler(BaseHandler):
 	params = {
 	'student':stud,
 	'c':c,
-	'courses':course_list
+	'courses':course_list,
+	'all_courses':all_courses
 	}
 	self.render_template('student/cart.html',params)
 	
@@ -115,30 +117,50 @@ class CartHandler(BaseHandler):
 	if relax: # done
 		content = self.request.get('relaxation')
 		user = self.user
-        	dep = models.Department.get_by_id(user.department)
-        	stud = models.Student.get_by_id(self.user.auth_ids[0])
-        	hod_query = models.Faculty.query(models.Faculty.key==dep.hod)
+		dep = models.Department.get_by_id(user.department)
+		stud = models.Student.get_by_id(self.user.auth_ids[0])
+		hod_query = models.Faculty.query(models.Faculty.key==dep.hod)
 		hods = hod_query.fetch(1)
-        	app = models.Application(app_type=False,student=stud.key,faculty=hods[0].key,content=content,status=False)
-        	app.put()
-        	pass
-        elif registerCourse:  # done
+		app = models.Application(app_type=False,student=stud.key,faculty=hods[0].key,content=content,status=False)
+		app.put()
+	elif registerCourse:  # done
 		coursename = self.request.get('course')
-		course = models.Course.get_by_id(coursename)
+		course = models.Course.get_by_id(ndb.Key(urlsafe=coursename).string_id())
+		logging.info(course)
 		if course==None:
 			self.display_message("course is empty","student")
 		else:
-		    	user = self.user
+			user = self.user
 			stud = models.Student.get_by_id(self.user.auth_ids[0])
 			query_res = models.Registration.query(models.Registration.course==course.key)
 			listed = query_res.fetch(100)
 			count = listed.__len__()
+			logging.info(str(stud.credits) + " "+str(course.credits))
 			if course.floated:
 				if (stud.credits>=course.credits):
-					reg = models.Registration(course=course.key,student=stud.key,closed=(count>=10))
-					reg.put()
-					stud.credits = stud.credits - course.credits
-					stud.put()
+					reg_query = models.Registration.query(models.Registration.course==course.key, models.Registration.student==stud.key)
+					#logging.info(reg)
+					reg_query_res = reg_query.fetch()
+					logging.info(reg_query_res)
+					if reg_query_res == []:
+						reg = models.Registration(course=course.key,student=stud.key,closed=(count>=10))
+						reg.put()
+						stud.credits = stud.credits - course.credits
+						stud.put()
+						self.display_popup("course added to your cart")
+						#return
+					else:
+						logging.info("you have already added this course")
+						self.display_popup("you have already added this course")
+						logging.info("read here at line 155")
+						#return
+				else:
+					logging.info("credit limit is exceeded")
+					#self.display_message("credit limit exceeded","student")
+					self.display_popup("credit limit exceeded, try removing a course")
+					#return
+			else:
+				self.display_message("course is not floated","student")
 	elif remove: # done
 		courseid = self.request.get('course_id')
 		course = models.Course.get_by_id(courseid)
@@ -148,14 +170,16 @@ class CartHandler(BaseHandler):
 		reg_query = models.Registration.query(models.Registration.student==stud.key,models.Registration.course==course.key)
 		reg = reg_query.get()
 		reg.key.delete()
+		self.display_popup("course removed")
 	else: # done
 		courseid = self.request.get('course_id')
 		course = models.Course.get_by_id(courseid)
-        	stud = models.Student.get_by_id(self.user.auth_ids[0])
-        	fac_query = models.Faculty.query(models.Faculty.key==course.coordinator)
+		stud = models.Student.get_by_id(self.user.auth_ids[0])
+		fac_query = models.Faculty.query(models.Faculty.key==course.coordinator)
 		facs = fac_query.fetch(1)
-        	app = models.Application(app_type=True,student=stud.key,faculty=facs[0].key,content=content,status=False)
-        	app.put()
+		app = models.Application(app_type=True,student=stud.key,faculty=facs[0].key,content=content,status=False)
+		app.put()
+	#self.redirect(self.uri_for('cart'))
 	course_list =list()
 	stud = models.Student.get_by_id(self.user.auth_ids[0])
 	reg_query = models.Registration.query(models.Registration.student==stud.key)
@@ -166,4 +190,5 @@ class CartHandler(BaseHandler):
 		course = courses[0]
 		course_list.append(course)
 	params = {'courses':course_list}
-	self.render_template('student/student.html',params)
+	#self.render_template('student/student.html',params)
+		#self.redirect(self.uri_for('student'))

@@ -101,5 +101,8 @@ class Resources(ndb.Model):
   resource_title = ndb.StringProperty()
   resource_key = ndb.BlobKeyProperty()
 
+class Registration_status(ndb.Model):
+  """Models the status of registration"""
+  open = ndb.BooleanProperty()
 
 

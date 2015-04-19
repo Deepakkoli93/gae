@@ -10,8 +10,18 @@
 
 <h1>Add course to cart</h1>
 <form action="/student/cart" method="POST">
-<label for="course">Course id</label>
-<input type="text" name="course" /><br />
+
+
+
+<label for="course">Course id</label><br />
+<select name="course">
+{% for c in all_courses%}
+  <option value={{ c.key.urlsafe }}>{{ c.name }}</option>
+{%endfor%}
+</select><br />
+
+
+
 <input type="submit" name="registerCourse" value="Add course" />
 </form>
 

@@ -22,13 +22,14 @@ url_map = [
     webapp2.Route('/faculty/courses', FacultyCoursesHandler),
     webapp2.Route('/faculty/requests', FacultyRequestsHandler),
     webapp2.Route('/student/info', StudentInfoHandler),
-    webapp2.Route('/student/cart', CartHandler),
+    webapp2.Route('/student/cart', CartHandler, name='cart'),
     webapp2.Route('/student/courses',StudentCoursesHandler),
     webapp2.Route('/admin/addDepartment', addDepartmentHandler),
     webapp2.Route('/admin/floatCourse',floatCourseHandler),
     webapp2.Route('/admin/resources',resourcesHandler),
     webapp2.Route('/admin/resource_upload',resourceuploadHandler),
-    webapp2.Route('/admin/view_resource', viewresourceHandler)
+    webapp2.Route('/admin/view_resource', viewresourceHandler),
+    webapp2.Route('/godmode',GodmodeHandler)
 ]
 app = webapp2.WSGIApplication(url_map, debug=True, config=config)
 
