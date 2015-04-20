@@ -28,6 +28,12 @@ class AdminHandler(BaseHandler):
       #self.display_popup("registration status changed")
       self.redirect(self.uri_for('admin'))
 
+class AdminInfoHandler(BaseHandler):
+  @admin_required
+  def get(self):
+    self.render_template('admin/info.html')
+
+
 
 class SignupHandler(BaseHandler):
   @admin_required
@@ -208,16 +214,22 @@ class resourcesHandler(BaseHandler):
      #   logging.info("here1")
 
 class resourceuploadHandler(blobstore_handlers.BlobstoreUploadHandler,BaseHandler):
-	def post(self):
-		logging.info("here2")
-		upload = self.get_uploads()[0]
-		logging.info("upload key "+str(upload.key()))
-		resource_title = self.request.get('resource_title')
-		resource = models.Resources(resource_title=resource_title,resource_key=upload.key())
-		resource.put()
-		logging.info("here3")
-		#self.redirect('/admin/view_resource/%s' % upload.key())
-		self.display_message("Resource uploaded")
+  def post(self):
+    try:
+      upload = self.get_uploads()[0]
+      logging.info("upload key "+str(upload.key()))
+      resource_title = self.request.get('resource_title')
+      rr_query = models.Resources.query(models.Resources.resource_title == resource_title)
+      rr = rr_query.fetch()
+      for r in rr:
+        r.key.delete()
+      resource = models.Resources(resource_title=resource_title,resource_key=upload.key())
+      resource.put()
+      #logging.info("here3")
+  		#self.redirect('/admin/view_resource/%s' % upload.key())
+      self.display_message("Resource uploaded")
+    except:
+      self.display_message("An error occured, please try again")
 		#pass
 
 class viewresourceHandler(blobstore_handlers.BlobstoreDownloadHandler,BaseHandler):

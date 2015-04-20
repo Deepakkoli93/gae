@@ -1,0 +1,22 @@
+{% extends "faculty.html" %}
+{% block title %}
+<h1 align="center">{{courseid}}</h1>
+{% endblock %}
+{% block maincontent %}
+
+<table style="width:100%">
+		<tr>
+			<th>Student ID</th>
+			<th>Submission</th>
+		</tr>
+		{%	for stud_id in stud_ids %}
+		<tr>
+			<form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
+			<td align="center">{{stud_id}}</td>
+			<td align="center"><input type="submit" name="download" value="Download"></td>
+			</form>
+		</tr>
+		{% endfor %}
+		</table>
+
+{% endblock %} 

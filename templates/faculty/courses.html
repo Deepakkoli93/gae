@@ -1,17 +1,42 @@
 {% extends "faculty.html" %}
 {% block title %}
-<h1 align="center">{{course.course_id}}</h1>
+<h1 align="center">{{courseid}}</h1>
 {% endblock %}
 {% block maincontent %}
 
 <h3>Add/Edit resource</h3>
 <form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
-<label for="resource_title">Enter resource title</label>
+<select name="res_type">
+  <option value="Assignment">Assignment</option>
+  <option value="Resource">Resource</option>
+</select><br />
+<label for="resource_title">Enter resource title:</label>
 <input type="text" name="resource_title" />
-<label for="resource_file">Upload resource</label>
+<label for="resource_file">Upload resource:</label>
 <input type="file" name="file" />
-<input type="submit" name="submit" value="Submit">
+<input type="submit" name="upload" value="Submit">
 
 </form>
+
+<h3>Previous posts</h3>
+
+<table style="width:100%">
+		<tr>
+			<th>Type</th>
+			<th>Title</th>
+			<th>Link</th>
+			<th>Submissions</th>
+		</tr>
+		{%	for r in resources %}
+		<tr>
+			<form action="/faculty/courses" method="POST">
+			<td align="center">{% if r.resource_type %} Assignment {% else %} Resource {% endif %}</td>
+			<td align="center">{{ r.resource_title }}<input type="hidden" name="link" value={{ r.key.urlsafe }}></td>
+			<td align="center"><input type="submit" name="download" value="Download"></td>
+			<td align="center">{% if r.resource_type %}<input type="submit" name="view" value="View submissions"> {% endif %}</td>
+			</form>
+		</tr>
+		{% endfor %}
+		</table>
 
 {% endblock %} 

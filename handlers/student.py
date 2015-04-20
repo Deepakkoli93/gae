@@ -1,4 +1,8 @@
 from misc import *
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext.webapp.util import run_wsgi_app
+
 class StudentHandler(BaseHandler):
   @user_required
   def get(self):
@@ -27,8 +31,11 @@ class StudentHandler(BaseHandler):
     	for course in course_list:
 		pressed = self.request.get(course.course_id)
 		if pressed:
-			params = {'course':course,'courses':course_list}
-			self.render_template('student/courses.html',params)
+			self.session["CID"] = course.course_id
+			#upload_url = blobstore.create_upload_url('/student/resource_upload')
+			resources = models.Resources.query(models.Fac_Resources.course==course.key)
+			params = {'courses':course_list, "resources":resources}
+			self.redirect(self.uri_for('stu_courses'), abort=False)
     
 class StudentInfoHandler(BaseHandler):
   @user_required
@@ -61,9 +68,12 @@ class StudentInfoHandler(BaseHandler):
     self.user.put()
     self.display_message("information saved successfully","student")
 
-class StudentCoursesHandler(BaseHandler):
+class StudentCoursesHandler(blobstore_handlers.BlobstoreDownloadHandler, BaseHandler):
   @user_required
   def get(self):
+	courseid=self.session.get('CID')
+	course = models.Course.get_by_id(courseid)
+	upload_url = blobstore.create_upload_url('/student/resource_upload')
 	course_list =list()
 	stud = models.Student.get_by_id(self.user.auth_ids[0])
 	reg_query = models.Registration.query(models.Registration.student==stud.key)
@@ -73,8 +83,35 @@ class StudentCoursesHandler(BaseHandler):
 		courses = c_query.fetch(1)
 		course = courses[0]
 		course_list.append(course)
-	params = {'courses':course_list}
+	res_query = models.Fac_Resources.query(models.Fac_Resources.course==course.key)
+	resources = res_query.fetch(500)
+	params = {'courseid':courseid,'courses':course_list, 'resources':resources, "upload_url":upload_url,  'user_data' : self.user, 'userid' : self.user.auth_ids[0], 'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0])}
 	self.render_template('student/courses.html',params)
+	
+  def post(self):
+	  courseid = self.session.get('CID')
+	  course = models.Course.get_by_id(courseid)
+	  download = self.request.get('download')
+	  if download:
+		  rid = self.request.get('link')
+		  resource = models.Fac_Resources.get_by_id(ndb.Key(urlsafe=rid).integer_id())
+		  bi = blobstore.BlobInfo.get(resource.resource_key)
+		  self.send_blob(bi,save_as=True)
+		  
+
+class stuResourceuploadHandler(blobstore_handlers.BlobstoreUploadHandler,BaseHandler):
+	def post(self):
+		#~ logging.info("here2")
+		upload = self.get_uploads()[0]
+		#~ logging.info("upload key "+str(upload.key()))
+		rid = self.request.get('link')
+		resource = models.Fac_Resources.get_by_id(ndb.Key(urlsafe=rid).integer_id())
+		#~ logging.info(resc_type)
+		submission = models.Assignment(student=models.Student.get_by_id(self.user.auth_ids[0]).key, resource_id=resource.key, resource_key=upload.key() )
+		submission.put()
+		#~ logging.info("here3")
+		#self.redirect('/admin/view_resource/%s' % upload.key())
+		self.display_message("Submission uploaded","student")
 
 class CartHandler(BaseHandler):
   @user_required

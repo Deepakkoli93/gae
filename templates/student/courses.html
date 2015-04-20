@@ -1,4 +1,28 @@
 {% extends "student.html" %}
+{% block title %}
+<h1 align="center">{{courseid}}</h1>
+{% endblock %}
 {% block maincontent %}
-<h1 align="center">{{course.course_id}}</h1>
+
+<table style="width:100%">
+		<tr>
+			<th>Type</th>
+			<th>Title</th>
+			<th>Link</th>
+			<th>Submission</th>
+		</tr>
+		{%	for r in resources %}
+		<tr>
+			<form action="/student/courses" method="POST">
+			<td align="center">{% if r.resource_type %} Assignment {% else %} Resource {% endif %}</td>
+			<td align="center">{{ r.resource_title }}<input type="hidden" name="link" value={{ r.key.urlsafe }}></td>
+			<td align="center"><input type="submit" name="download" value="Download"></td>
+			</form>
+			<form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
+			<td align="center"><input type="hidden" name="link" value={{ r.key.urlsafe }}>{% if r.resource_type %}<input type="file" name="file" /><input type="submit" name="upload" value="Upload submission"> {% endif %}</td>
+			</form>
+		</tr>
+		{% endfor %}
+		</table>
+
 {% endblock %}
