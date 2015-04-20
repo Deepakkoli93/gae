@@ -1,11 +1,10 @@
 {% extends "student.html" %}
 {% block maincontent %}
-
 <h1>Credit Relaxation Request</h1>
 <form action="/student/cart" method="POST">
 <label for="relaxation">Credit Relaxation Request</label>
 <input type="text" name="relaxation" /><br />
-<input type="submit" name="relax" value="Submit relaxation request" />
+<input type="submit" name="relax" value="Submit relaxation request" {{reg_status}}/>
 </form>
 
 <h1>Add course to cart</h1>
@@ -22,7 +21,7 @@
 
 
 
-<input type="submit" name="registerCourse" value="Add course" />
+<input type="submit" name="registerCourse" value="Add course" {{reg_status}}/>
 </form>
 
 <h1>Registration Cart</h1>
@@ -46,7 +45,7 @@
 			<td>{{ course_credits }}</td>
 			<td>{{ course_fac }}</td>
 			<td>{% if closed %}<input type="text" name="approval" /> <input type="submit" name="approve" value="Submit Approval request" /> {% endif %}</td>
-			<td><input type="submit" name="remove" value="Remove course" /></td>
+			<td><input type="submit" name="remove" value="Remove course" {{reg_status}}/></td>
 			</form>
 		</tr>
 		{% endfor %}

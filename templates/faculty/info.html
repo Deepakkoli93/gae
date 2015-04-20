@@ -5,21 +5,21 @@
 {% block maincontent %}
 
 <h1>Edit personal information</h1>
-<form action="" method="POST">
+<form action="/faculty/info" method="POST">
+<label for="username">Username</label>
+<input type="text" name="username" value={{ userid }} readonly /><br />
 <label for="email">Email address</label>
-<input type="text" name="email" /><br />
-
-
-
-<label for="department">Department</label>
-<input type="text" name="department" /><br />
-
-<label for="name">Name</label>
-<input type="text" name="name" /><br />
+<input type="text" name="email" value={{ user_data.email_address }} /><br />
+<label for="name">First Name</label>
+<input type="text" name="name" value={{ user_data.name }} /><br />
 <label for="lastname">Last Name</label>
-<input type="text" name="lastname" /><br />
+<input type="text" name="lastname" value={{ user_data.last_name }} /><br />
+<label for="department">Department</label>
+<input type="text" name="department" value={{ user_data.department }} readonly /><br />
 <label for="webpage">Webpage</label>
-<input type="text" name="webpage" /><br />
+<input type="text" name="webpage" value={{ faculty_data.webpage }}/><br />
+<label for="role">Role</label>
+<input type="text" name="role" value="Faculty" readonly /><br />
 <input type="submit" value="Save information" />
 </form>
 

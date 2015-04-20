@@ -1,0 +1,20 @@
+{% extends "student.html" %}
+
+{% block title %}Download resources{% endblock %}
+
+{% block maincontent %}
+
+
+<h1>Download a resource</h1>
+<form action="/student/view_resource" method="POST">
+<label for="title">Resource Title</label>
+
+<select name="title">
+{% for r in resources%}
+  <option value={{ r.key.urlsafe }}>{{ r.resource_title }}</option>
+{%endfor%}
+</select><br />
+
+<input type="submit" value="Download resource" />
+
+{% endblock %}

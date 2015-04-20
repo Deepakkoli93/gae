@@ -101,11 +101,16 @@ class CartHandler(BaseHandler):
 		course_fac_list.append(coordis[0].name)
 		closed_list.append(registration.closed)
 	c = zip(course_id_list,course_credits_list,course_fac_list,closed_list)
+	reg = models.Registration_status.get_by_id("registration_status").open
+	reg_status = "disabled"
+	if reg:
+		reg_status = ""
 	params = {
 	'student':stud,
 	'c':c,
 	'courses':course_list,
-	'all_courses':all_courses
+	'all_courses':all_courses,
+	'reg_status':reg_status
 	}
 	self.render_template('student/cart.html',params)
 	
@@ -123,6 +128,7 @@ class CartHandler(BaseHandler):
 		hods = hod_query.fetch(1)
 		app = models.Application(app_type=False,student=stud.key,faculty=hods[0].key,content=content,status=False)
 		app.put()
+		self.display_popup("your application has been forwarded to the hod")
 	elif registerCourse:  # done
 		coursename = self.request.get('course')
 		course = models.Course.get_by_id(ndb.Key(urlsafe=coursename).string_id())
@@ -152,7 +158,6 @@ class CartHandler(BaseHandler):
 					else:
 						logging.info("you have already added this course")
 						self.display_popup("you have already added this course")
-						logging.info("read here at line 155")
 						#return
 				else:
 					logging.info("credit limit is exceeded")
@@ -192,3 +197,26 @@ class CartHandler(BaseHandler):
 	params = {'courses':course_list}
 	#self.render_template('student/student.html',params)
 		#self.redirect(self.uri_for('student'))
+
+class studentresourcesHandler(BaseHandler):
+	@user_required
+	def get(self):
+		course_list =list()
+		stud = models.Student.get_by_id(self.user.auth_ids[0])
+		reg_query = models.Registration.query(models.Registration.student==stud.key)
+		regs = reg_query.fetch(10)
+		resources = models.Resources.query()
+		for registration in regs:
+			c_query = models.Course.query(models.Course.key==registration.course)
+			courses = c_query.fetch(1)
+			course = courses[0]
+			course_list.append(course)
+		params = {
+		'user_data' : self.user,
+		'userid' : self.user.auth_ids[0],
+		'student_data' : models.Student.get_by_id(self.user.auth_ids[0]),
+		'courses':course_list,
+		'resources':resources
+		}
+		logging.info(models.Student.get_by_id(self.user.auth_ids[0]))
+		self.render_template('student/resources.html', params)

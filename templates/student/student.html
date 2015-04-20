@@ -23,6 +23,7 @@
 <a href="/student">Home</a><br />
 <a href="/student/info">Show personal information</a><br />
 <a href="/student/cart">Registration Cart </a><br />
+<a href="/student/resources">Resources </a><br />
 {% for course in courses %}
 <form action="/student" method="POST">
 <input type="submit" name={{ course.course_id }} value={{ course.course_id }} readonly><br />

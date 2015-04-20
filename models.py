@@ -94,11 +94,23 @@ class Application(ndb.Model):
   app_type = ndb.BooleanProperty()
   student = ndb.KeyProperty(kind = Student)
   faculty = ndb.KeyProperty(kind = Faculty)
+  course = ndb.KeyProperty(kind = Course)
   content = ndb.StringProperty()
   status = ndb.BooleanProperty()
 
 class Resources(ndb.Model):
   resource_title = ndb.StringProperty()
+  resource_key = ndb.BlobKeyProperty()
+
+class Fac_Resources(ndb.Model):
+  resource_title = ndb.StringProperty()
+  resource_key = ndb.BlobKeyProperty()
+  resource_type = ndb.BooleanProperty() # type = true if assignment, false if just a resource
+  course = ndb.KeyProperty(kind = Course)
+  
+class Assignment(ndb.Model):
+  resource_id = ndb.KeyProperty(kind = Fac_Resources)
+  student = ndb.KeyProperty(kind = Student)
   resource_key = ndb.BlobKeyProperty()
 
 class Registration_status(ndb.Model):

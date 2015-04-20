@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>{% block title %}Web Academic System{% endblock %}</title>
+    <title>Web Academic System</title>
     <style>
       input {
         display: block;
@@ -11,11 +11,9 @@
   </head>
 
 <body>
-{% autoescape off %}{{ user_data.name  }} {{user_data.lastname}} {{user_data.department}} {{user_data.email_address}}
-{{faculty_data}} {{faculty_data.faculty}}{% endautoescape %}
 <table width="100%" border="0">
     <td colspan="2" bgcolor="#b5dcb3" align="center">
-      <h1>Academic System</h1>
+      <h1>{% block title %}Academic System{% endblock %}</h1>
     </td>
   <tr valign="top">
     <td bgcolor="#aaa" width="300" align="center">
@@ -25,7 +23,11 @@
 <a href="/faculty">Home</a><br />
 <a href="/faculty/info">Show personal information</a><br />
 <a href="/faculty/requests">Student requests</a><br />
-<a href="faculty/courses">Courses</a>
+{% for course in courses %}
+<form action="/faculty" method="POST">
+<input type="submit" name={{ course.course_id }} value={{ course.course_id }} readonly><br />
+</form>
+{% endfor %}
 
     </td>
     <td bgcolor="#eee" height="550">

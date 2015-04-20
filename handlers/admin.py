@@ -4,14 +4,30 @@ from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp.util import run_wsgi_app
 
 class AdminHandler(BaseHandler):
-  @user_required
+  @admin_required
   def get(self):
-    params = {'current_sem':current_sem, 'registration_open':registration_open}
+    reg = models.Registration_status.get_by_id("registration_status")
+    reg_status = False
+    if reg.open:
+      reg_status = True 
+
+    params = {'current_sem':current_sem, 'registration_open':registration_open, 'reg_status':reg_status}
     self.render_template('admin/admin.html',params)
+
   def post(self):
-    if(self.request.POST.get('newsem') == "Start new semester"):
-      current_sem = current_sem + 1
-      self.display_message("new semester started")
+    logging.info("line 18 called")
+    if self.request.POST.get('myform')=="Switch registration":
+      stat = self.request.get('reg')
+      logging.info(stat)
+      reg_entity = models.Registration_status.get_by_id("registration_status")
+      if stat == "open":
+        reg_entity.open = True
+      elif stat == "closed":
+        reg_entity.open = False
+      reg_entity.put()
+      #self.display_popup("registration status changed")
+      self.redirect(self.uri_for('admin'))
+
 
 class SignupHandler(BaseHandler):
   @admin_required

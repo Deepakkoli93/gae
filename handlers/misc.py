@@ -160,6 +160,7 @@ class ForgotPasswordHandler(BaseHandler):
       return
 
     user_id = user.get_id()
+    email = user.email_address
     token = self.user_model.create_signup_token(user_id)
 
     verification_url = self.uri_for('verification', type='p', user_id=user_id,
@@ -168,6 +169,11 @@ class ForgotPasswordHandler(BaseHandler):
     msg = 'Send an email to user in order to reset their password. \
           They will be able to do so by visiting <a href="{url}">{url}</a>'
 
+    sender_address = "deepakkoli93@gmail.com"
+    subject = "Change your password"
+    body = """Thank you for creating an account! Please change your password by clicking on the link below:%s""" % verification_url
+    mail.send_mail(sender_address, email, subject, body)
+    self.redirect(self.uri_for('login'), abort=True)
     self.display_message(msg.format(url=verification_url))
   
   def _serve_page(self, not_found=False):
@@ -294,7 +300,7 @@ class AuthenticatedHandler(BaseHandler):
 class GodmodeHandler(BaseHandler):
   @admin_required
   def get(self):
-    stat = models.Registration_status(open=True, id="registraion_status")
+    stat = models.Registration_status(open=True, id="registration_status")
     stat.put()
     self.display_message('registration status put as true')
 

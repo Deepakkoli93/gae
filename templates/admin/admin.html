@@ -28,12 +28,23 @@
 <br><b>{{ current_sem }}</b></br>
   <form action=""  name="newsem" method="POST">
     <input type="submit" name="myform" value="Start new semester" />
-    
-    <form action="" method="POST">
-  <input type="radio" name="reg" value="open">Open<br>
+  
+  {% if reg_status %}  
+  <form action="/admin" name = "reg_toggle" method="POST">
+  <input type="radio" name="reg" value="open" checked="checked">Open<br>
   <input type="radio" name="reg" value="closed">Closed
+  <input type="submit" name="myform" value="Switch registration" />
+
+  </form>
+ {%else%}
+   <form action="/admin" name="reg_toggle" method="POST">
+  <input type="radio" name="reg" value="open" >Open<br>
+  <input type="radio" name="reg" value="closed" checked="checked">Closed
+  <input type="submit" name="myform" value="Switch registration" />
+
   </form>
 
+  {%endif%}
 
 
 

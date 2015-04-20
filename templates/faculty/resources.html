@@ -1,10 +1,10 @@
 {% extends "faculty.html" %}
-{% block title %}
-<h1 align="center">{{course.course_id}}</h1>
-{% endblock %}
+
+{% block title %}Add/Delete resources{% endblock %}
+
 {% block maincontent %}
 
-<h3>Add/Edit resource</h3>
+<h1>Add/Edit resource</h1>
 <form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
 <label for="resource_title">Enter resource title</label>
 <input type="text" name="resource_title" />
@@ -14,4 +14,4 @@
 
 </form>
 
-{% endblock %} 
+{% endblock %}

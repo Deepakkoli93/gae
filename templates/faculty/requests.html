@@ -1,2 +1,30 @@
 {% extends "faculty.html" %}
 
+{% block maincontent %}
+
+<h1>Requests</h1>
+
+<table style="width:100%">
+		<tr>
+			<th>Request</th>
+			<th>Course</th>
+			<th>Student</th>
+			<th>Content</th>
+			<th>Respond</th>
+		</tr>
+		{% for type,student,cont,course in requests %}
+		<tr>
+			<form action="/faculty/requests" method="POST">
+			<td align="center">{% if type %}<input type="text" name="type" value="Approval" readonly> {% else %} <input type="text" name="type" value="Relaxation" readonly> {% endif %}</td>
+			<td align="center">{% if type %} <input type="text" name="course" value={{ course }} readonly> {% endif %}</td>
+			<td align="center"><input type="text" name="student" value={{ student }} readonly></td>
+			<td align="center"><input type="text" name="content" value={{ cont }} readonly></td>
+			<td align="center"><input type="submit" name="approve" value="Approve request" /></td>
+			</form>
+		</tr>
+		{% endfor %}
+		</table>
+
+
+
+{% endblock %}
