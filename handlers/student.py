@@ -215,12 +215,18 @@ class CartHandler(BaseHandler):
 		self.display_popup("course removed")
 	else: # done
 		courseid = self.request.get('course_id')
+		logging.info(courseid)
 		course = models.Course.get_by_id(courseid)
+		content = self.request.get('approval')
+		if content == "":
+			content = "Kindly approve the course"
 		stud = models.Student.get_by_id(self.user.auth_ids[0])
 		fac_query = models.Faculty.query(models.Faculty.key==course.coordinator)
 		facs = fac_query.fetch(1)
-		app = models.Application(app_type=True,student=stud.key,faculty=facs[0].key,content=content,status=False)
+		app = models.Application(app_type=True,student=stud.key,course=course.key,faculty=facs[0].key,content=content,status=False)
 		app.put()
+		params = {"message":"application forwarded", "link":'/student/cart'}
+		self.display_popup(params)
 	#self.redirect(self.uri_for('cart'))
 	course_list =list()
 	stud = models.Student.get_by_id(self.user.auth_ids[0])

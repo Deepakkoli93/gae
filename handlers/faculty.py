@@ -183,13 +183,16 @@ class FacultyRequestsHandler(BaseHandler):
 	for request in requests:
 		request_type_list.append(request.app_type)
 		stud_query = models.Student.query(models.Student.key==request.student)
-		stud = stud_query.fetch(1)
-		request_student_list.append(stud[0].name)    ######### why is the username passing on, instead of name???
+		stud = models.Student.get_by_id(request.student.string_id())
+		logging.info(stud)
+		request_student_list.append(stud.name)    ######### why is the username passing on, instead of name???
 		request_content_list.append(request.content)
 		if request.app_type:
-			c_query = models.Course.query(models.Course.key==request.course)
-			cou = c_query.fetch(1)
-			request_course_list.append(cou[0].course_id)
+			logging.info(request.course==None)
+			cou = models.Course.get_by_id(request.course.string_id())
+			logging.info(cou)
+			#cou = c_query.fetch(1)
+			request_course_list.append(cou.course_id)
 		else:
 			request_course_list.append("")
 	c = zip(request_type_list,request_student_list,request_content_list, request_course_list)
@@ -202,7 +205,7 @@ class FacultyRequestsHandler(BaseHandler):
 		'courses':course_list,
 		'requests':c
 		}
-		logging.info(models.Student.get_by_id(self.user.auth_ids[0]))
+		#logging.info(models.Student.get_by_id(self.user.auth_ids[0]))
 	self.render_template('faculty/requests.html',params)
 	
   def post(self):
