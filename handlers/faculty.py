@@ -186,7 +186,7 @@ class FacultyRequestsHandler(BaseHandler):
 		stud = models.Student.get_by_id(request.student.string_id())
 		logging.info(stud)
 		request_student_list.append(stud.name)    ######### why is the username passing on, instead of name???
-		request_content_list.append(request.content)
+		request_content_list.append(str(request.content))
 		if request.app_type:
 			logging.info(request.course==None)
 			cou = models.Course.get_by_id(request.course.string_id())
@@ -225,7 +225,7 @@ class FacultyRequestsHandler(BaseHandler):
 		  user_query = models.User.query(models.User.key==stud.student)
 		  users = user_query.fetch(10)
 		  user = users[0]
-		  dep_query = models.Department.query(models.Department.key==user.department)
+		  dep_query = models.Department.query(models.Department.key==ndb.Key("Department",user.department))
 		  deps = dep_query.fetch(10)
 		  dep = deps[0]
 		  if (dep.hod==models.Faculty.get_by_id(self.user.auth_ids[0]).key):  # approved by hod
@@ -233,9 +233,13 @@ class FacultyRequestsHandler(BaseHandler):
 			  k.delete()
 			  reg_query = models.Registration.query(models.Registration.student==stud.key, models.Registration.course==course.key)
 			  regs=reg_query.fetch(10)
-			  reg=regs[0]
-			  reg.closed=False
-			  reg.put()
+			  if not regs:
+			  	params = {"message":"looks like the student already removed the course","link":'/faculty/requests'}
+			  	self.display_popup(params)
+			  else:
+				  reg=regs[0]
+				  reg.closed=False
+				  reg.put()
 		  else:  # move forward to HOD
 			  app.faculty=dep.hod
 			  app.put()

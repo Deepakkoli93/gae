@@ -18,7 +18,7 @@
 			<td align="center">{% if type %}<input type="text" name="type" value="Approval" readonly> {% else %} <input type="text" name="type" value="Relaxation" readonly> {% endif %}</td>
 			<td align="center">{% if type %} <input type="text" name="course" value={{ course }} readonly> {% endif %}</td>
 			<td align="center"><input type="text" name="student" value={{ student }} readonly></td>
-			<td align="center"><input type="text" name="content" value={{ cont }} readonly></td>
+			<td align="center"><input type="text" name="content" value="{{ cont }}" readonly></td>
 			<td align="center"><input type="submit" name="approve" value="Approve request" /></td>
 			</form>
 		</tr>

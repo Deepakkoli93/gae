@@ -3,6 +3,7 @@
 from google.appengine.ext.webapp import template
 from google.appengine.ext import ndb
 from google.appengine.api import mail
+import cgi
 
 
 import logging

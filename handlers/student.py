@@ -161,11 +161,17 @@ class CartHandler(BaseHandler):
 		user = self.user
 		dep = models.Department.get_by_id(user.department)
 		stud = models.Student.get_by_id(self.user.auth_ids[0])
-		hod_query = models.Faculty.query(models.Faculty.key==dep.hod)
-		hods = hod_query.fetch(1)
-		app = models.Application(app_type=False,student=stud.key,faculty=hods[0].key,content=content,status=False)
-		app.put()
-		self.display_popup("your application has been forwarded to the hod")
+		#hod = models.Faculty.get_by_id(dep.hod.string_id())
+		app_query = models.Application.query(models.Application.app_type==False, models.Application.student==stud.key, models.Application.faculty==dep.hod).fetch(1)
+		if not app_query:
+			app = models.Application(app_type=False,student=stud.key,faculty=dep.hod,content=content,status=False)
+			app.put()
+			params = {"message":"your application has been forwarded to the hod", "link":"/student/cart"}
+			self.display_popup(params)
+		else:
+			params = {"message":"you have already placed an application", "link":"/student/cart"}
+			self.display_popup(params)
+
 	elif registerCourse:  # done
 		coursename = self.request.get('course')
 		course = models.Course.get_by_id(ndb.Key(urlsafe=coursename).string_id())
@@ -190,16 +196,16 @@ class CartHandler(BaseHandler):
 						reg.put()
 						stud.credits = stud.credits - course.credits
 						stud.put()
-						self.display_popup("course added to your cart")
+						params = {"message":"course added to your cart","link":'/student/cart'}
+						self.display_popup(params)
 						#return
 					else:
-						logging.info("you have already added this course")
-						self.display_popup("you have already added this course")
+						params = {"message":"you have already added this course","link":'/student/cart'}
+						self.display_popup(params)
 						#return
 				else:
-					logging.info("credit limit is exceeded")
-					#self.display_message("credit limit exceeded","student")
-					self.display_popup("credit limit exceeded, try removing a course")
+					params = {"message":"credit limit exceeded, try removing a course","link":'/student/cart'}
+					self.display_popup(params)
 					#return
 			else:
 				self.display_message("course is not floated","student")
@@ -212,7 +218,8 @@ class CartHandler(BaseHandler):
 		reg_query = models.Registration.query(models.Registration.student==stud.key,models.Registration.course==course.key)
 		reg = reg_query.get()
 		reg.key.delete()
-		self.display_popup("course removed")
+		params = {"message":"course removed", "link":'/student/cart'}
+		self.display_popup(params)
 	else: # done
 		courseid = self.request.get('course_id')
 		logging.info(courseid)
@@ -221,12 +228,17 @@ class CartHandler(BaseHandler):
 		if content == "":
 			content = "Kindly approve the course"
 		stud = models.Student.get_by_id(self.user.auth_ids[0])
-		fac_query = models.Faculty.query(models.Faculty.key==course.coordinator)
-		facs = fac_query.fetch(1)
-		app = models.Application(app_type=True,student=stud.key,course=course.key,faculty=facs[0].key,content=content,status=False)
-		app.put()
-		params = {"message":"application forwarded", "link":'/student/cart'}
-		self.display_popup(params)
+		#facs = models.Faculty.get_by_id(course.coordinator.string_id())
+		#facs = fac_query.fetch(1)
+		app_query =  models.Application.query(models.Application.app_type==True,models.Application.student==stud.key,models.Application.course==course.key,models.Application.faculty==course.coordinator).fetch(1)
+		if not app_query:
+			app = models.Application(app_type=True,student=stud.key,course=course.key,faculty=course.coordinator,content=content,status=False)
+			app.put()
+			params = {"message":"application forwarded", "link":'/student/cart'}
+			self.display_popup(params)
+		else:
+			params = {"message":"you have already requested approval","link":'/student/cart'}
+			self.display_popup(params)
 	#self.redirect(self.uri_for('cart'))
 	course_list =list()
 	stud = models.Student.get_by_id(self.user.auth_ids[0])
