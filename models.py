@@ -117,4 +117,13 @@ class Registration_status(ndb.Model):
   """Models the status of registration"""
   open = ndb.BooleanProperty()
 
+class Semester(ndb.Model):
+  """Models a semester, will have the name as a string which is also the id"""
+  semester = ndb.StringProperty()
+
+class Grades(ndb.Model):
+  """Models grade as a integer """
+  student = ndb.KeyProperty(kind = Student)
+  course = ndb.KeyProperty(kind = Course)
+  grade = ndb.IntegerProperty()
 

@@ -1,42 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <title>Web Academic System</title>
-    <style>
-      input {
-        display: block;
-      }
-    </style>
-  </head>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Academic website</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/stylesheets/simple-sidebar.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
 
 <body>
-<table width="100%" border="0">
-    <td colspan="2" bgcolor="#b5dcb3" align="center">
-      <h1>{% block title %}Academic System{% endblock %}</h1>
-    </td>
-  <tr valign="top">
-    <td bgcolor="#aaa" width="300" align="center">
-      <b>Main Menu</b><br />
-          Logged in as <span style="background-color: OldLace">{{ user.name }}</span> | <a href="/logout">Logout</a>
-      <br />
-<a href="/faculty">Home</a><br />
-<a href="/faculty/info">Show personal information</a><br />
-<a href="/faculty/requests">Student requests</a><br />
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+             <p class="text-primary">Logged in as {{ user.name }} </p>
+             </li>
+             <li>
+             <a href="/logout">Logout</a>
+            </li>
+                <li>
+                    <a href="/faculty">Home</a>
+                </li>
+                <li>
+<a href="/faculty/info">Show personal information</a>                </li>
+                <li>
+<a href="/faculty/requests">Student requests</a>                </li>
+                <li>
 {% for course in courses %}
 <form action="/faculty" method="POST">
-<input type="submit" name={{ course.course_id }} value={{ course.course_id }} readonly><br />
+<input type="submit" name={{ course.course_id }} class="btn btn-default" value={{ course.course_id }} readonly><br />
 </form>
 {% endfor %}
+                  </li>
+                
 
-    </td>
-    <td bgcolor="#eee" height="550">
-        {% block maincontent %}
-        <h1>CSL740 Academic System</h1>
-		{% endblock %}
-    </td>
-  </tr>
-	</table>
-	
-	</body>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% block maincontent %}
+        
+                        {% endblock %}
+                        <p>
+                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle 
+                        Menu</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
+
 </html>

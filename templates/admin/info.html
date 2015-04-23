@@ -5,20 +5,33 @@
 {% block maincontent %}
 
 <h1>Edit personal information</h1>
-<form action="/admin/info" method="POST">
+<form action="/admin/info" method="POST" class="form-horizontal">
+
+<div class="form-group">
 <label for="username">Username</label>
-<input type="text" name="username" value={{user.name}} readonly /><br />
+<input type="text" name="username"  class="form-control" value="{{user.name}}" readonly /><br />
+</div>
+<div class="form-group">
 <label for="email">Email address</label>
-<input type="text" name="email" /><br />
+<input type="text" class="form-control" name="email" /><br />
+</div>
+<div class="form-group">
 <label for="password">Password</label>
-<input type="password" name="password" /><br />
+<input type="password" class="form-control"  name="password" /><br />
+</div>
+<div class="form-group">
 <label for="name">Name</label>
-<input type="text" name="name" /><br />
+<input type="text" class="form-control"  name="name" /><br />
+</div>
+<div class="form-group">
 <label for="lastname">Last Name</label>
-<input type="text" name="lastname" /><br />
+<input type="text" class="form-control"  name="lastname" /><br />
+</div>
+<div class="form-group">
 <label for="role">Role</label>
-<input type="text" name="role" value="Admin" readonly /><br />
-<input type="submit" value="Save information" />
+<input type="text"  class="form-control" name="role" value="Admin" readonly /><br />
+</div>
+<input type="submit" class="btn btn-default" value="Save information" />
 </form>
 
 {% endblock %}

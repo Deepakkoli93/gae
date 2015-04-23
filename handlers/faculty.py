@@ -12,7 +12,7 @@ class FacultyHandler(BaseHandler):
 	courses = course_query.fetch(100)
 	for course in courses:
 		course_list.append(course)
-		params = {
+	params = {
 		'user_data' : self.user,
 		'userid' : self.user.auth_ids[0],
 		'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0]),

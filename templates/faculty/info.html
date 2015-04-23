@@ -6,21 +6,35 @@
 
 <h1>Edit personal information</h1>
 <form action="/faculty/info" method="POST">
+<div class="form-group">
 <label for="username">Username</label>
-<input type="text" name="username" value={{ userid }} readonly /><br />
+<input type="text" class="form-control" name="username" value={{ userid }} readonly /><br />
+</div>
+<div class="form-group">
 <label for="email">Email address</label>
-<input type="text" name="email" value={{ user_data.email_address }} /><br />
+<input type="text"  class="form-control" name="email" value={{ user_data.email_address }} /><br />
+</div>
+<div class="form-group">
 <label for="name">First Name</label>
-<input type="text" name="name" value={{ user_data.name }} /><br />
+<input type="text"  class="form-control" name="name" value={{ user_data.name }} /><br />
+</div>
+<div class="form-group">
 <label for="lastname">Last Name</label>
-<input type="text" name="lastname" value={{ user_data.last_name }} /><br />
+<input type="text" class="form-control"  name="lastname" value={{ user_data.last_name }} /><br />
+</div>
+<div class="form-group">
 <label for="department">Department</label>
-<input type="text" name="department" value={{ user_data.department }} readonly /><br />
+<input type="text" class="form-control"  name="department" value={{ user_data.department }} readonly /><br />
+</div>
+<div class="form-group">
 <label for="webpage">Webpage</label>
-<input type="text" name="webpage" value={{ faculty_data.webpage }}/><br />
+<input type="text" class="form-control"  name="webpage" value="{{ faculty_data.webpage }}"><br />
+</div>
+<div class="form-group">
 <label for="role">Role</label>
-<input type="text" name="role" value="Faculty" readonly /><br />
-<input type="submit" value="Save information" />
+<input type="text"  class="form-control" name="role" value="Faculty" readonly /><br />
+</div>
+<input type="submit" class="btn btn-default" value="Save information" />
 </form>
 
 {% endblock %}

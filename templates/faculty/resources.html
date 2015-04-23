@@ -6,11 +6,15 @@
 
 <h1>Add/Edit resource</h1>
 <form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
+<div class="form-group">
 <label for="resource_title">Enter resource title</label>
-<input type="text" name="resource_title" />
+<input type="text" class="from-control" name="resource_title" />
+</div>
+<div class="form-group">
 <label for="resource_file">Upload resource</label>
 <input type="file" name="file" />
-<input type="submit" name="submit" value="Submit">
+</div>
+<input type="submit" class="btn btn-default" name="submit" value="Submit">
 
 </form>
 

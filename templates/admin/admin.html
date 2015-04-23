@@ -1,62 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <title>{% block title %}Web Academic System{% endblock %}</title>
-    <style>
-      input {
-        display: block;
-      }
-    </style>
-  </head>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Academic website</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/stylesheets/simple-sidebar.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
 
 <body>
-<table width="100%" border="0">
-    <td colspan="2" bgcolor="#b5dcb3" align="center">
-      <h1>Academic System</h1>
-    </td>
-  <tr valign="top">
-    <td bgcolor="#aaa" width="300" align="center">
-      <b>Main Menu</b><br />
-          Logged in as <span style="background-color: OldLace">{{ user.name }}</span> | <a href="/logout">Logout</a>
-      <br />
-<a href="/admin/signup">Add/Delete User</a><br />
-<a href="/admin/floatCourse">Add/Float Course</a><br />
-<a href="/admin/addDepartment">Add/Edit Department</a><br />
-<a href="/admin/info">Personal Information</a><br />
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+             <p class="text-primary">Logged in as {{ user.name }} </p>
+             </li>
+             <li>
+             <a href="/logout">Logout</a>
+            </li>
+                <li>
+                    <a href="/admin/signup">Add/Delete User</a>
+                </li>
+                <li>
+<a href="/admin/floatCourse">Add/Float Course</a>                </li>
+                <li>
+<a href="/admin/addDepartment">Add/Edit Department</a>                </li>
+                <li>
+<a href="/admin/info">Personal Information</a>                </li>
+                <li>
 <a href="/admin/resources">Add/Modify Resources</a>
+                </li>
+                <li>
+<a href="/admin/toggle_registration">Toggle Registration</a>
+                </li>
+                <li>
 <br><b>{{ current_sem }}</b></br>
   <form action=""  name="newsem" method="POST">
     <input type="submit" name="myform" value="Start new semester" />
-  
-  {% if reg_status %}  
-  <form action="/admin" name = "reg_toggle" method="POST">
-  <input type="radio" name="reg" value="open" checked="checked">Open<br>
-  <input type="radio" name="reg" value="closed">Closed
-  <input type="submit" name="myform" value="Switch registration" />
+                  </li>
+                
 
-  </form>
- {%else%}
-   <form action="/admin" name="reg_toggle" method="POST">
-  <input type="radio" name="reg" value="open" >Open<br>
-  <input type="radio" name="reg" value="closed" checked="checked">Closed
-  <input type="submit" name="myform" value="Switch registration" />
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
 
-  </form>
-
-  {%endif%}
-
-
-
-    </td>
-    <td bgcolor="#eee" height="550">
-        {% block maincontent %}
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% block maincontent %}
         
-		{% endblock %}
-    </td>
-  </tr>
-	</table>
-	
-	</body>
-</html>
+                        {% endblock %}
+                        <p>
+                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle 
+                        Menu</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
 
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="/js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/js/bootstrap.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
+
+</html>

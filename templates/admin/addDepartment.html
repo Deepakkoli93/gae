@@ -5,14 +5,22 @@
 {% block maincontent %}
 
 <h1>Create a new department</h1>
-<form action="/admin/addDepartment" method="POST">
+<form action="/admin/addDepartment" method="POST" class="form-horizontal">
+
+<div class="form-group">
 <label for="dep_id">Department id</label>
-<input type="text" name="dep_id" />
+<input type="text" class="form-control" name="dep_id" />
+</div>
+<div class="form-group">
 <label for="name">Department name</label>
-<input type="text" name="name" />
+<input type="text" class="form-control"  name="name" />
+</div>
+<div class="form-group">
 <label for="hod">HOD</label>
-<input type="text" name="hod" />
-<input type="submit" value="Create new department" />
+<input type="text" class="form-control"  name="hod" />
+</div>
+
+<input type="submit" class="btn btn-default" value="Create new department" />
 
 </form>
 

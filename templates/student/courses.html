@@ -4,7 +4,7 @@
 {% endblock %}
 {% block maincontent %}
 
-<table style="width:100%">
+<table class="table table-hover table-bordered" style="width:100%">
 		<tr>
 			<th>Type</th>
 			<th>Title</th>
@@ -14,12 +14,12 @@
 		{%	for r in resources %}
 		<tr>
 			<form action="/student/courses" method="POST">
-			<td align="center">{% if r.resource_type %} Assignment {% else %} Resource {% endif %}</td>
-			<td align="center">{{ r.resource_title }}<input type="hidden" name="link" value={{ r.key.urlsafe }}></td>
-			<td align="center"><input type="submit" name="download" value="Download"></td>
+			<td>{% if r.resource_type %} Assignment {% else %} Resource {% endif %}</td>
+			<td>{{ r.resource_title }}<input type="hidden" name="link" value={{ r.key.urlsafe }}></td>
+			<td><input type="submit" name="download" class="btn btn-default" value="Download"></td>
 			</form>
 			<form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
-			<td align="center"><input type="hidden" name="link" value={{ r.key.urlsafe }}>{% if r.resource_type %}<input type="file" name="file" /><input type="submit" name="upload" value="Upload submission"> {% endif %}</td>
+			<td ><input type="hidden" name="link" value={{ r.key.urlsafe }}>{% if r.resource_type %}<input type="file" name="file" /><input type="submit" name="upload"  class="btn btn-default" value="Upload submission"> {% endif %}</td>
 			</form>
 		</tr>
 		{% endfor %}

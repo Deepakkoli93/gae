@@ -33,6 +33,9 @@ class AdminInfoHandler(BaseHandler):
   def get(self):
     self.render_template('admin/info.html')
 
+  def post(self):
+    self.render_template('admin/admin.html')
+
 
 
 class SignupHandler(BaseHandler):
@@ -254,3 +257,27 @@ class removeUserHandler(BaseHandler):
     #self.display_message(uid)
     #TODO remove user?
     pass
+
+class toggleregistrationHandler(BaseHandler):
+  @admin_required
+  def get(self):
+    reg = models.Registration_status.get_by_id("registration_status")
+    reg_status = False
+    if reg.open:
+      reg_status = True 
+
+    params = {'current_sem':current_sem, 'registration_open':registration_open, 'reg_status':reg_status}
+    self.render_template('admin/toggle_registration.html',params)
+
+  def post(self):
+      stat = self.request.get('reg')
+      logging.info(stat)
+      reg_entity = models.Registration_status.get_by_id("registration_status")
+      if stat == "open":
+        reg_entity.open = True
+      elif stat == "closed":
+        reg_entity.open = False
+      reg_entity.put()
+      #self.display_popup("registration status changed")
+      params = {"message":"registration status toggled","link":"/admin/toggle_registration"}
+      self.display_popup(params);

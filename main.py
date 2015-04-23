@@ -34,6 +34,7 @@ url_map = [
     webapp2.Route('/admin/resources',resourcesHandler),
     webapp2.Route('/admin/resource_upload',resourceuploadHandler),
     webapp2.Route('/admin/view_resource', viewresourceHandler),
+    webapp2.Route('/admin/toggle_registration',toggleregistrationHandler),
     webapp2.Route('/godmode',GodmodeHandler)
 ]
 app = webapp2.WSGIApplication(url_map, debug=True, config=config)

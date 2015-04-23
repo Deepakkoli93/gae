@@ -3,24 +3,31 @@
 {% block maincontent %}
 
 <h1>Add/Update a course</h1>
-<form action="/admin/floatCourse" method="POST">
-
+<form action="/admin/floatCourse" method="POST" class="form-horizontal">
+<div class="form-group">
 <label for="course_id">Course id</label>
-<input type="text" name="course_id" />
-<label for="name">Name</label>
-<input type="text" name="name" />
+<input type="text" class = "form-control"  name="course_id" />
+</div>
 
+<div class="form-group">
+<label for="name">Name</label>
+<input type="text" class = "form-control"  name="name" />
+</div>
+
+<div class="form-group">
 <label for="department">Department</label><br />
 <select name="dep_id">
 {% for d in dep%}
   <option value={{ d.key.urlsafe }}>{{ d.name }}</option>
 {%endfor%}
 </select><br />
-
+</div>
 </select><br />
 
+<div class="form-group">
 <label for="credits">Credits</label>
-<input type="float" name="credits" />
+<input type="float" class = "form-control"  name="credits" />
+</div>
 
 <label for="prereq1">Pre requisite 1</label>
 <select name="prereq1">
@@ -58,26 +65,30 @@
 {%endfor%}
 </select><br />
 
+<div class="form-group">
 <label for="description">Course Description</label>
-<textarea name="description" rows="3" cols="60"></textarea>
-<input type="submit" name="myform" value="Update course">
+<textarea name="description" class="form-control" rows="3" cols="60"></textarea>
+</div>
+
+<input type="submit" name="myform" class="btn btn-default" value="Update course">
 
 <h1>Float a course</h1>
 <form action="/admin/floatCourse"  method="POST">
 
+<label>Course</label>
 <select name="course_id2">
 {% for c in courses%}
   <option value={{ c.key.urlsafe }}>{{ c.name }}</option>
 {%endfor%}
 </select><br />
 
+<label>Faculty</label>
 <select name="faculty_id">
 {% for f in fac%}
   <option value={{ f.key.urlsafe }}>{{ f.name }}</option>
 {%endfor%}
 </select><br />
 
-
-<input type="submit" name="myform" value="Float the course" />
+<input type="submit" name="myform" class="btn btn-default" value="Float the course" />
 
 {% endblock %}

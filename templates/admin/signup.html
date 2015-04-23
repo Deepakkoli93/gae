@@ -5,34 +5,49 @@
 {% block maincontent %}
 
 <h1>Register a new user</h1>
-<form action="/admin/signup" method="POST">
+<form action="/admin/signup" method="POST" class="form-horizontal">
 
+<div class = "form-group">
 <select name="role">
   <option value="faculty">Faculty</option>
   <option value="student">Student</option>
   <option value="admin">Admin</option>
-</select><br />
+</select>
+</div>
 
+<div class = "form-group">
 <label for="username">Username</label>
-<input type="text" name="username" /><br />
+<input type="text" class = "form-control" name="username" />
+</div>
+<div class = "form-group">
 <label for="email">Email address</label>
-<input type="text" name="email" /><br />
+<input type="text" class="form-control" name="email" />
+</div>
+<div class = "form-group">
 <label for="password">Password</label>
-<input type="password" name="password" /><br />
+<input type="password" class="form-control"  name="password" /><br />
+</div>
+<div class = "form-group">
 <label for="name">Name</label>
-<input type="text" name="name" /><br />
+<input type="text" class="form-control" name="name" /><br />
+</div>
+<div class = "form-group">
 <label for="lastname">Last Name</label>
-<input type="text" name="lastname" /><br />
+<input type="text" class="form-control"  name="lastname" /><br />
+</div>
+<div class = "form-group">
 <label for="department">Department</label>
-<input type="text" name="department" /><br />
-
-<input type="submit" value="Create user" />
+<input type="text" class="form-control"  name="department" /><br />
+</div>
+<input type="submit" class="btn btn-default"  value="Create user" />
 </form>
 
 <h1>Delete an existing user</h1>
 <form action="/removeUser" method="POST">
+<div class = "form-group">
 <label for="username">Username</label>
-<input type="text" name="username" /><br />
-<input type="submit" value="Delete user" />
-
+<input type="text" class="form-control" name="username" />
+</div>
+<input type="submit" class="btn btn-default" value="Delete user" />
+</form>
 {% endblock %}
