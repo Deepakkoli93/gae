@@ -62,7 +62,7 @@ class AcademicHistory(ndb.Model):
   """Models the academic history of a student. It includes coures done,
   grade obtained in it and the semester"""
   course = ndb.StringProperty()
-  grade = ndb.StringProperty()
+  grade = ndb.IntegerProperty()
   semester = ndb.StringProperty()
 
 class Student(ndb.Model):
@@ -114,11 +114,12 @@ class Assignment(ndb.Model):
   resource_key = ndb.BlobKeyProperty()
 
 class Registration_status(ndb.Model):
-  """Models the status of registration"""
+  """Models the status of registration, its id is "registration_status" """
   open = ndb.BooleanProperty()
 
 class Semester(ndb.Model):
-  """Models a semester, will have the name as a string which is also the id"""
+  """Models a semester, will have the name as a string which is also the id
+  its id is "current_sem" """
   semester = ndb.StringProperty()
 
 class Grades(ndb.Model):

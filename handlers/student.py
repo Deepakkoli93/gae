@@ -72,6 +72,7 @@ class StudentCoursesHandler(blobstore_handlers.BlobstoreDownloadHandler, BaseHan
   @user_required
   def get(self):
 	courseid=self.session.get('CID')
+	logging.info(courseid)
 	course = models.Course.get_by_id(courseid)
 	upload_url = blobstore.create_upload_url('/student/resource_upload')
 	course_list =list()
@@ -83,9 +84,11 @@ class StudentCoursesHandler(blobstore_handlers.BlobstoreDownloadHandler, BaseHan
 		courses = c_query.fetch(1)
 		course = courses[0]
 		course_list.append(course)
-	res_query = models.Fac_Resources.query(models.Fac_Resources.course==course.key)
+	res_query = models.Fac_Resources.query(models.Fac_Resources.course==ndb.Key('Course',courseid))
 	resources = res_query.fetch(500)
+	logging.info(course.key)
 	params = {'courseid':courseid,'courses':course_list, 'resources':resources, "upload_url":upload_url,  'user_data' : self.user, 'userid' : self.user.auth_ids[0], 'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0])}
+	#logging.info(params)
 	self.render_template('student/courses.html',params)
 	
   def post(self):

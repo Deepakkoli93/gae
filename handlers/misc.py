@@ -303,7 +303,9 @@ class GodmodeHandler(BaseHandler):
   def get(self):
     stat = models.Registration_status(open=True, id="registration_status")
     stat.put()
-    self.display_message('registration status put as true')
+    sem = models.Semester(semester = "I sem 2015-2016", id="current_sem")
+    sem.put()
+    self.display_message('registration status put as true and semester entity created')
 
 
 config = {

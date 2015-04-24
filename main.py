@@ -17,6 +17,7 @@ url_map = [
     webapp2.Route('/admin', AdminHandler, name='admin'),
     webapp2.Route('/admin/info', AdminInfoHandler),
     webapp2.Route('/admin/removeUser', removeUserHandler),
+    webapp2.Route('/admin/change_semester',changesemesterHandler),
     webapp2.Route('/student', StudentHandler, name='student'),
     webapp2.Route('/faculty', FacultyHandler, name='faculty'),
     webapp2.Route('/faculty/info', FacultyInfoHandler),

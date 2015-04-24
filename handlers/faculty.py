@@ -198,7 +198,7 @@ class FacultyRequestsHandler(BaseHandler):
 	c = zip(request_type_list,request_student_list,request_content_list, request_course_list)
 	for course in courses:
 		course_list.append(course)
-		params = {
+	params = {
 		'user_data' : self.user,
 		'userid' : self.user.auth_ids[0],
 		'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0]),

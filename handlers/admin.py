@@ -92,7 +92,7 @@ class SignupHandler(BaseHandler):
     
     user = user_data[1]
     if(role=="student"):
-      stu = models.Student(student=user.key,name=name+" "+last_name, credits=10, id=user_name)
+      stu = models.Student(student=user.key,name=name+" "+last_name, credits=10,history=[], id=user_name)
       stu.put()
 
     if(role=="faculty"):
@@ -281,3 +281,32 @@ class toggleregistrationHandler(BaseHandler):
       #self.display_popup("registration status changed")
       params = {"message":"registration status toggled","link":"/admin/toggle_registration"}
       self.display_popup(params);
+
+class changesemesterHandler(BaseHandler):
+  @admin_required
+  def get(self):
+    sem = models.Semester.get_by_id("current_sem")
+    params = {"current_sem":sem}
+    self.render_template('admin/change_semester.html',params)
+
+  def post(self):
+    semester_name = self.request.get('semester_name')
+    sem = models.Semester.get_by_id("current_sem")
+    old_sem_name = sem.semester
+    sem.semester = semester_name
+    sem.put()
+
+    grades = models.Grades.query().fetch();
+    for g in grades:
+      stud = models.Student.get_by_id(g.student.string_id())
+      cour = models.Course.get_by_id(g.course.string_id())
+      grad = g.grade
+      h = models.AcademicHistory(course=cour.name, grade=grad, semester=old_sem_name)
+      stud.history.append(h)
+
+    params = {"message":"semester changed","link":"/admin/change_semester"}
+    self.display_popup(params)
+
+
+
+
