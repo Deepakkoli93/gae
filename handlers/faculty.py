@@ -130,17 +130,18 @@ class FacultyCoursesHandler(blobstore_handlers.BlobstoreDownloadHandler, BaseHan
 		  sub_query = models.Assignment.query(models.Assignment.resource_id==resource.key)
 		  subs = sub_query.fetch(500)
 		  for sub in subs:
-			  stud = models.Student.get_by_id(sub.student)
+			  stud = models.Student.get_by_id(sub.student.string_id())
 			  stud_ids.append(stud.name)
 			  submission_links.append(str(sub.resource_key))
 		  c = zip(stud_ids,submission_links)
+		  logging.info(c)
 		  course_list =list()
 		  fac = models.Faculty.get_by_id(self.user.auth_ids[0])
 		  course_query = models.Course.query(models.Course.coordinator==fac.key)
 		  courses = course_query.fetch(500)
 		  for cse in courses:
 			  course_list.append(cse)
-		  params = {'courseid':courseid, 'c':c, 'user_data' : self.user, 'userid' : self.user.auth_ids[0], 'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0]), 'courses':course_list }
+		  params = {'stud_ids':stud_ids,'courseid':courseid, 'c':c, 'user_data' : self.user, 'userid' : self.user.auth_ids[0], 'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0]), 'courses':course_list }
 		  self.render_template('faculty/submissions.html',params)
 		  
 class facResourceuploadHandler(blobstore_handlers.BlobstoreUploadHandler,BaseHandler):
@@ -254,5 +255,8 @@ class FacultyRequestsHandler(BaseHandler):
 		  stud.put()
 		  k.delete()   
 	  self.display_message("Application approved","faculty")
+
+
+
 		  
 		  

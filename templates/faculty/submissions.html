@@ -4,7 +4,7 @@
 {% endblock %}
 {% block maincontent %}
 
-<table style="width:100%">
+<table class="table table-hover table-bordered" style="width:100%">
 		<tr>
 			<th>Student ID</th>
 			<th>Submission</th>
@@ -12,8 +12,8 @@
 		{%	for stud_id in stud_ids %}
 		<tr>
 			<form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
-			<td align="center">{{stud_id}}</td>
-			<td align="center"><input type="submit" name="download" value="Download"></td>
+			<td>{{stud_id}}</td>
+			<td><input type="submit" class="btn btn-default" name="download" value="Download"></td>
 			</form>
 		</tr>
 		{% endfor %}

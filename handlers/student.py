@@ -104,7 +104,11 @@ class StudentCoursesHandler(blobstore_handlers.BlobstoreDownloadHandler, BaseHan
 
 class stuResourceuploadHandler(blobstore_handlers.BlobstoreUploadHandler,BaseHandler):
 	def post(self):
-		#~ logging.info("here2")
+		logging.info(not self.get_uploads())
+		if not self.get_uploads():
+			params={"message":"please choose a file to upload","link":"/student/courses"}
+			self.display_popup(params)
+			return
 		upload = self.get_uploads()[0]
 		#~ logging.info("upload key "+str(upload.key()))
 		rid = self.request.get('link')

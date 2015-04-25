@@ -52,8 +52,11 @@ class SignupHandler(BaseHandler):
     department = self.request.get('department')
     role = self.request.get('role')
     #logging.info('role of the student is %s' %role)
-
     if role=="admin":
+      if not (user_name and email and name and password and last_name):
+        logging.info("not ands")
+        params={"message":"please enter all the fields","link":"/admin/signup"}
+        self.display_popup(params)
       user_data=self.user_model.create_user(user_name,
       email_address=email, name=name, password_raw=password,
       last_name=last_name, role=role,verified=True)
@@ -74,8 +77,12 @@ class SignupHandler(BaseHandler):
           They will be able to do so by visiting <a href="{url}">{url}</a>'
 
       self.display_message(msg.format(url=verification_url))
+
       return
-    dep = models.Department.get_by_id(department)
+    try:
+      dep = models.Department.get_by_id(department)
+    except:
+      dep=None
     if dep==None:
       self.display_message('department does not exist, user not created')
       return
