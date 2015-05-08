@@ -282,3 +282,14 @@ class studentresourcesHandler(BaseHandler):
 		}
 		logging.info(models.Student.get_by_id(self.user.auth_ids[0]))
 		self.render_template('student/resources.html', params)
+
+class studentviewresourceHandler(blobstore_handlers.BlobstoreDownloadHandler,BaseHandler):
+    def post(self):
+    	#logging.info("here4")
+        #logging.info("key is "+photo_key)
+        rid = self.request.get('title')
+        logging.info("rid = ")
+        logging.info(ndb.Key(urlsafe=rid).integer_id())
+        resource = models.Resources.get_by_id(ndb.Key(urlsafe=rid).integer_id())
+        bi = blobstore.BlobInfo.get(resource.resource_key)
+        self.send_blob(bi,save_as=True)

@@ -4,6 +4,10 @@
 {% endblock %}
 {% block maincontent %}
 
+<form action="/faculty/courses" method="POST">
+<input type="submit" class="btn btn-default" name="viewstudents" value="Grade Students">
+</form>
+
 <h3>Add/Edit resource</h3>
 <form name="input" action={{ upload_url }} method="POST" enctype="multipart/form-data">
 <select name="res_type">

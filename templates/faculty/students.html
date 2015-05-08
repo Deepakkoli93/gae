@@ -1,0 +1,38 @@
+{% extends "faculty.html" %}
+{% block title %}
+<h1 align="center">{{courseid}}</h1>
+{% endblock %}
+{% block maincontent %}
+
+<h1> Students registered for {{courseid}}</h1>
+<table class="table table-hover table-bordered" style="width:100%">
+		<tr>
+			<th>Student ID</th>
+			<th>Name</th>
+			<th>Grade</th>
+		</tr>
+		{%	for stud,grade in c %}
+		<tr>
+			<form action="/faculty/courses" method="POST">
+			<td>{{ stud.key }}<input type="hidden" name ='student' value={{ stud.key.urlsafe }}></td>
+			<td>{{ stud.name }}</td>
+			<td><select name="grade">
+					<option value="">{% if not grade %}--Select grade--{% else %} {{ grade }} {% endif %}</option>
+					<option value="10">10</option>
+					<option value="9">9</option>
+					<option value="8">8</option>
+					<option value="7">7</option>
+					<option value="6">6</option>
+					<option value="5">5</option>
+					<option value="4">4</option>
+					<option value="3">3</option>
+					<option value="2">2</option>
+					<option value="1">1</option>
+				</select>
+				<input type="submit" class="btn btn-default" name="addgrade" value="Submit grade"></td>
+			</form>
+		</tr>
+		{% endfor %}
+		</table>
+
+{% endblock %} 

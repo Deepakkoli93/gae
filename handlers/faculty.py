@@ -113,6 +113,14 @@ class FacultyCoursesHandler(blobstore_handlers.BlobstoreDownloadHandler, BaseHan
 	  course = models.Course.get_by_id(courseid)
 	  download = self.request.get('download')
 	  view = self.request.get('view')
+	  viewstudents = self.request.get('viewstudents')
+	  addgrade = self.request.get('addgrade')
+	  course_list =list()
+	  fac = models.Faculty.get_by_id(self.user.auth_ids[0])
+	  course_query = models.Course.query(models.Course.coordinator==fac.key)
+	  courses = course_query.fetch(500)
+	  for cse in courses:
+		  course_list.append(cse)
 	  if download:
 		  rid = self.request.get('link')
 		  logging.info("rid="+rid)
@@ -122,7 +130,7 @@ class FacultyCoursesHandler(blobstore_handlers.BlobstoreDownloadHandler, BaseHan
 		  bi = blobstore.BlobInfo.get(resource.resource_key)
 		  self.send_blob(bi,save_as=True)
 		  #self.display_message("Resource downloaded","faculty")
-	  else:
+	  elif view:
 		  rid = self.request.get('link')
 		  resource = models.Fac_Resources.get_by_id(ndb.Key(urlsafe=rid).integer_id())
 		  stud_ids = list()
@@ -135,14 +143,43 @@ class FacultyCoursesHandler(blobstore_handlers.BlobstoreDownloadHandler, BaseHan
 			  submission_links.append(str(sub.resource_key))
 		  c = zip(stud_ids,submission_links)
 		  logging.info(c)
-		  course_list =list()
-		  fac = models.Faculty.get_by_id(self.user.auth_ids[0])
-		  course_query = models.Course.query(models.Course.coordinator==fac.key)
-		  courses = course_query.fetch(500)
-		  for cse in courses:
-			  course_list.append(cse)
 		  params = {'stud_ids':stud_ids,'courseid':courseid, 'c':c, 'user_data' : self.user, 'userid' : self.user.auth_ids[0], 'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0]), 'courses':course_list }
 		  self.render_template('faculty/submissions.html',params)
+	  elif viewstudents:
+		  regis_query = models.Registration.query(models.Registration.course==course.key)
+		  students_list = list()
+		  grades_list = list()
+		  for regis in regis_query:
+			  students_list.append(models.Student.get_by_id(regis.student.string_id()))
+			  grades_list.append(regis.grade)
+		  c = zip(students_list,grades_list)
+		  params = {'courseid':courseid, 'c':c, 'user_data' : self.user, 'userid' : self.user.auth_ids[0], 'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0]), 'courses':course_list }
+		  self.render_template('faculty/students.html',params)
+	  else:  # addgrade
+		  grade = self.request.get('grade')
+		  student = self.request.get('student')
+		  stu = models.Student.get_by_id(ndb.Key(urlsafe=student).string_id())
+		  if (grade!=0):
+			  regis_query = models.Registration.query(models.Registration.student==stu.key, models.Registration.course==ndb.Key('Course',courseid))
+			  regis = regis_query.get()
+			  regis.grade = grade
+			  regis.put()
+		  rregs = models.Registration.query(models.Registration.course==ndb.Key('Course',courseid)).fetch(500)
+		  studs = list()
+		  for rr in rregs:
+		  	studs.append(models.Student.get_by_id(rr.student.string_id()))
+		  #stu_query = models.Student.query(models.Student.key==models.Registration.student, models.Course.key==models.Registration.course)
+		  #studs = stu_query.fetch(500)
+		  students_list = list()
+		  grades_list = list()
+		  for stud in studs:
+			  students_list.append(stud)
+			  reg_query = models.Registration.query(models.Registration.student==stud.key, models.Registration.course==course.key)
+			  grades_list.append(reg_query.get().grade)
+		  c = zip(students_list,grades_list)
+		  params = {'courseid':courseid, 'c':c, 'user_data' : self.user, 'userid' : self.user.auth_ids[0], 'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0]), 'courses':course_list,"message":"grade assigned","link":"" }
+		  self.display_popup(params)
+		  self.render_template('faculty/students.html',params)
 		  
 class facResourceuploadHandler(blobstore_handlers.BlobstoreUploadHandler,BaseHandler):
 	def post(self):
@@ -151,8 +188,12 @@ class facResourceuploadHandler(blobstore_handlers.BlobstoreUploadHandler,BaseHan
 		logging.info("self session")
 		logging.info(self.session)
 		course = models.Course.get_by_id(courseid)
-		
+		if not self.get_uploads():
+			params={"message":"please choose a file to upload","link":"/faculty/courses"}
+			self.display_popup(params)
+			return
 		upload = self.get_uploads()[0]
+
 		#~ logging.info("upload key "+str(upload.key()))
 		resource_title = self.request.get('resource_title')
 		resc_type = self.request.get('res_type')
@@ -255,6 +296,29 @@ class FacultyRequestsHandler(BaseHandler):
 		  stud.put()
 		  k.delete()   
 	  self.display_message("Application approved","faculty")
+
+class facultygeneralresourcesHandler(BaseHandler):
+  @faculty_required
+  def get(self):
+  	#logging.info("faculty info")
+  	logging.info(self.session)
+	course_list =list()
+	fac = models.Faculty.get_by_id(self.user.auth_ids[0])
+	course_query = models.Course.query(models.Course.coordinator==fac.key)
+	courses = course_query.fetch(100)
+	resources = models.Resources.query()
+	for course in courses:
+		course_list.append(course)
+	params = {
+	'user_data' : self.user,
+	'userid' : self.user.auth_ids[0],
+	'faculty_data' : models.Faculty.get_by_id(self.user.auth_ids[0]),
+	'courses':course_list,
+	'resources':resources
+	}
+	logging.info(models.Student.get_by_id(self.user.auth_ids[0]))
+	self.render_template('faculty/generalresources.html',params)
+
 
 
 

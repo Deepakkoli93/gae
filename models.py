@@ -88,6 +88,7 @@ class Registration(ndb.Model):
   course = ndb.KeyProperty(kind = Course)
   student = ndb.KeyProperty(kind = Student)
   closed = ndb.BooleanProperty()
+  grade = ndb.StringProperty()
   
 class Application(ndb.Model):
   """Models the credit relaxation(false) and course approval(true) requests"""

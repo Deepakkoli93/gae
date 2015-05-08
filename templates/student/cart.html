@@ -40,7 +40,7 @@
 		<tr>
 			<form action="/student/cart" method="POST">
 			<td><input type="text" class="form-control" name="course_id" class="form-control" value={{ course_id }} readonly></td>
-			<td>{{ closed }}</td>
+			<td>{%if closed%}Closed{%else%}Open{%endif%}</td>
 			<td>{{ course_credits }}</td>
 			<td>{{ course_fac }}</td>
 			<td>{% if closed %}<input type="text" class="form-control" name="approval" value="kindly approve the course"/> <input type="submit" name="approve" class="btn btn-default" value="Submit Approval request" /> {% endif %}</td>
